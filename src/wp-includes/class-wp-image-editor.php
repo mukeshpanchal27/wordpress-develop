@@ -307,7 +307,7 @@ abstract class WP_Image_Editor {
 	protected function get_default_quality( $mime_type ) {
 		switch ( $mime_type ) {
 			case 'image/webp':
-				$quality = 86;
+				$quality = 82;
 				break;
 			case 'image/jpeg':
 			default:
