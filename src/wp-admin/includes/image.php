@@ -514,36 +514,6 @@ function _wp_get_sources_from_meta( $meta ) {
  * @param string $mime_type       Optional. The mime type to check for missing sizes. Default is the image mime of $file.
  * @return array The attachment meta data with updated `sizes` array. Includes an array of errors encountered while resizing.
  */
-
-//add_filter( 'wp_pre_generate_additional_image_mime', 'filter_pre_generate_additional_image_mime', 10, 5 );
-function filter_pre_generate_additional_image_mime( $image, $file, $attachment_id, $size_name, $mime_type ) {
-	if ( 'medium' === $size_name && 'image/webp' === $mime_type ) {
-		return array
-		(
-			'file' => 'canola-300x225-jpg.webp',
-			'width' => 300,
-			'height' => 225,
-			'mime-type' => 'image/webp',
-			'filesize' => '1236',
-		);
-		
-	}
-}
-//add_filter( 'wp_pre_generate_additional_image_mime', 'filter_pre_generate_additional_image_mime1233', 20, 5 );
-function filter_pre_generate_additional_image_mime1233( $image, $file, $attachment_id, $size_name, $mime_type ) {
-	if ( 'image/webp' === $mime_type ) {
-		return array
-		(
-			'file' => 'canola-jpg.webp',
-			'width' => 300,
-			'height' => 225,
-			'mime-type' => 'image/webp',
-			'filesize' => '1236',
-		);
-		
-	}
-}
-
 function _wp_make_subsizes( $new_sizes, $file, $image_meta, $attachment_id, $mime_type = '' ) {
 	if ( empty( $image_meta ) || ! is_array( $image_meta ) ) {
 		// Not an image attachment.
