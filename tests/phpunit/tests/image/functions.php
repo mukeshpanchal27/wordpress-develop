@@ -963,8 +963,8 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 	 * @ticket 55443
 	 */
 	public function test_wp_pre_generate_additional_image_mime() {
-		if ( ! wp_image_editor_supports( array( 'mime_type' => 'application/pdf' ) ) ) {
-			$this->markTestSkipped( 'Rendering PDFs is not supported on this system.' );
+		if ( ! wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) {
+			$this->markTestSkipped( 'This test requires WebP support.' );
 		}
 
 		$temp_dir = get_temp_dir();
@@ -1027,8 +1027,8 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 	 * @ticket 55443
 	 */
 	public function test_wp_content_pre_replace_additional_image_source_for_size_thumbnail() {
-		if ( ! wp_image_editor_supports( array( 'mime_type' => 'application/pdf' ) ) ) {
-			$this->markTestSkipped( 'Rendering PDFs is not supported on this system.' );
+		if ( ! wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) {
+			$this->markTestSkipped( 'This test requires WebP support.' );
 		}
 
 		$temp_dir = get_temp_dir();
