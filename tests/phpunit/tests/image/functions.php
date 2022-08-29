@@ -963,6 +963,10 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 	 * @ticket 55443
 	 */
 	public function test_wp_pre_generate_additional_image_mime() {
+		if ( ! wp_image_editor_supports( array( 'mime_type' => 'application/pdf' ) ) ) {
+			$this->markTestSkipped( 'Rendering PDFs is not supported on this system.' );
+		}
+
 		$temp_dir = get_temp_dir();
 		$img_path = $temp_dir . 'test.jpg';
 		copy( DIR_TESTDATA . '/images/33772.jpg', $img_path );
@@ -973,8 +977,6 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 			$this->markTestSkipped( $editor->get_error_message() );
 		}
 
-		add_filter( 'wp_pre_generate_additional_image_mime', array( $this, 'filter_pre_generate_additional_image_mime' ), 10, 5 );
-
 		$attachment_id = $this->factory->attachment->create_object(
 			$img_path,
 			0,
@@ -983,24 +985,40 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 			)
 		);
 
+		add_filter( 'wp_pre_generate_additional_image_mime', '__return_false' );
+
 		$metadata = wp_generate_attachment_metadata( $attachment_id, $img_path );
 
+		$this->assertArrayNotHasKey( 'image/webp', $metadata );
+		$this->assertEmpty( $metadata['sizes'] );
+
+		remove_filter( 'wp_pre_generate_additional_image_mime', '__return_false' );
+
+		add_filter( 'wp_pre_generate_additional_image_mime', array( $this, 'filter_pre_generate_additional_image_mime' ), 10, 5 );
+
+		$metadata = wp_generate_attachment_metadata( $attachment_id, $img_path );
+
+		$this->assertSame( "canola-jpg.webp", $metadata['sources']['image/webp']['file'] );
 		foreach ( $metadata['sizes'] as $size_name => $size_meta ) {
-			$this->assertSame( "filter-image-{$size_meta['width']}x{$size_meta['height']}.webp", $size_meta['sources']['image/webp']['file'] );
+			if ( !isset( $size_meta['sources']['image/webp']['file'] ) ) {
+				return;	
+			}
+			$this->assertSame( "canola-jpg.webp", $size_meta['sources']['image/webp']['file'] );
 		}
 
 		remove_filter( 'wp_pre_generate_additional_image_mime', array( $this, 'filter_pre_generate_additional_image_mime' ), 10, 5 );
 	}
 
-	public function filter_pre_generate_additional_image_mime( $size_meta, $file, $attachment_id, $size_name, $mime_type ) {
+	public function filter_pre_generate_additional_image_mime( $image, $file, $attachment_id, $size_name, $mime_type ) {
 		if ( 'image/webp' === $mime_type ) {
-			$size_meta['sources'][ $mime_type ] = array(
-				'file'     => "filter-image-{$size_meta['width']}x{$size_meta['height']}.webp",
+			return array(
+				'file' => 'canola-jpg.webp',
+				'width' => 300,
+				'height' => 225,
+				'mime-type' => 'image/webp',
 				'filesize' => 1000,
 			);
 		}
-
-		return $size_meta;
 	}
 
 	/**
@@ -1009,6 +1027,10 @@ class Tests_Image_Functions extends WP_UnitTestCase {
 	 * @ticket 55443
 	 */
 	public function test_wp_content_pre_replace_additional_image_source_for_size_thumbnail() {
+		if ( ! wp_image_editor_supports( array( 'mime_type' => 'application/pdf' ) ) ) {
+			$this->markTestSkipped( 'Rendering PDFs is not supported on this system.' );
+		}
+
 		$temp_dir = get_temp_dir();
 		$img_path = $temp_dir . 'test.jpg';
 		copy( DIR_TESTDATA . '/images/33772.jpg', $img_path );

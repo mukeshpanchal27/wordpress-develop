@@ -514,6 +514,36 @@ function _wp_get_sources_from_meta( $meta ) {
  * @param string $mime_type       Optional. The mime type to check for missing sizes. Default is the image mime of $file.
  * @return array The attachment meta data with updated `sizes` array. Includes an array of errors encountered while resizing.
  */
+
+//add_filter( 'wp_pre_generate_additional_image_mime', 'filter_pre_generate_additional_image_mime', 10, 5 );
+function filter_pre_generate_additional_image_mime( $image, $file, $attachment_id, $size_name, $mime_type ) {
+	if ( 'medium' === $size_name && 'image/webp' === $mime_type ) {
+		return array
+		(
+			'file' => 'canola-300x225-jpg.webp',
+			'width' => 300,
+			'height' => 225,
+			'mime-type' => 'image/webp',
+			'filesize' => '1236',
+		);
+		
+	}
+}
+//add_filter( 'wp_pre_generate_additional_image_mime', 'filter_pre_generate_additional_image_mime1233', 20, 5 );
+function filter_pre_generate_additional_image_mime1233( $image, $file, $attachment_id, $size_name, $mime_type ) {
+	if ( 'image/webp' === $mime_type ) {
+		return array
+		(
+			'file' => 'canola-jpg.webp',
+			'width' => 300,
+			'height' => 225,
+			'mime-type' => 'image/webp',
+			'filesize' => '1236',
+		);
+		
+	}
+}
+
 function _wp_make_subsizes( $new_sizes, $file, $image_meta, $attachment_id, $mime_type = '' ) {
 	if ( empty( $image_meta ) || ! is_array( $image_meta ) ) {
 		// Not an image attachment.
@@ -617,6 +647,45 @@ function _wp_make_subsizes( $new_sizes, $file, $image_meta, $attachment_id, $mim
 
 	if ( method_exists( $editor, 'make_subsize' ) ) {
 		foreach ( $new_sizes as $new_size_name => $new_size_data ) {
+
+			/**
+			 * Short-circuits the image generation process.
+			 *
+			 * Developers can use this filter to update $size_meta with custom information for the
+			 * target mime_type.
+			 *
+			 * Returning `false` will skip generating image sub sizes and updating metadata.
+			 *
+			 * @since 6.1.0
+			 *
+			 * @param array|null|WP_Error $image         Image data {'path'=>string, 'file'=>string, 'width'=>int, 'height'=>int, 'mime-type'=>string} or null or WP_Error.
+			 * @param string              $file          File name.
+			 * @param int                 $attachment_id Attachment ID.
+			 * @param string              $new_size_name Image size - e.g. 'full', 'medium', 'small' etc.
+			 * @param array               $new_size_data An array with the dimensions of the image: height, width and crop {'height'=>int, 'width'=>int, 'crop'}.
+			 * @param string              $mime_type     Image mime type.
+			 *
+			 * @return array|false Can be array with updated meta information or false.
+			 */
+			$size_meta = apply_filters( 'wp_pre_generate_additional_image_mime', null, $file, $attachment_id, $new_size_name, $mime_type );
+			if ( false === $size_meta ) {
+				continue;
+			}
+
+			if ( ! empty( $size_meta ) ) {
+
+				if ( ! isset( $image_meta['sizes'][ $new_size_name ] ) ) {
+					$image_meta['sizes'][ $new_size_name ] = $size_meta;
+				}
+
+				if ( ! isset( $image_meta['sizes'][ $new_size_name ]['sources'] ) ) {
+					$image_meta['sizes'][ $new_size_name ]['sources'] = array();
+				}
+				$image_meta['sizes'][ $new_size_name ]['sources'][ $mime_type ] = _wp_get_sources_from_meta( $size_meta );
+				wp_update_attachment_metadata( $attachment_id, $image_meta );
+				continue;
+			}
+
 			$new_size_meta = $editor->make_subsize( $new_size_data );
 
 			if ( is_wp_error( $new_size_meta ) ) {
@@ -643,8 +712,26 @@ function _wp_make_subsizes( $new_sizes, $file, $image_meta, $attachment_id, $mim
 			}
 		}
 	} else {
+		$custom_created_sizes = array();
+		foreach ( $new_sizes as $new_size_name => $new_size_data ) {
+
+			/** This filter is documented in wp-admin/includes/image.php */
+			$size_meta = apply_filters( 'wp_pre_generate_additional_image_mime', null, $file, $attachment_id, $new_size_name, $mime_type );
+			if ( false === $size_meta ) {
+				continue;
+			}
+
+			if ( ! empty( $size_meta ) ) {
+				$custom_created_sizes[ $new_size_name ] = $size_meta;
+				unset( $new_size[ $new_size_name ] );
+				continue;
+			}
+		}
+
 		// Fall back to `$editor->multi_resize()`.
 		$created_sizes = $editor->multi_resize( $new_sizes );
+
+		$created_sizes = array_filter( array_merge( $created_sizes, $custom_created_sizes ) );
 
 		if ( ! empty( $created_sizes ) ) {
 			foreach ( $created_sizes as $created_size_name => $created_size_meta ) {
@@ -733,14 +820,15 @@ function _wp_make_additional_mime_types( $new_mime_types, $file, $image_meta, $a
 
 	foreach ( $new_mime_types as $mime_type ) {
 		/** This filter is documented in wp-admin/includes/image.php. */
-		$image_meta = apply_filters( 'wp_pre_generate_additional_image_mime', $image_meta, $file, $attachment_id, 'full', $mime_type );
+		$full_meta = apply_filters( 'wp_pre_generate_additional_image_mime', null, $file, $attachment_id, 'full', $mime_type );
 
-		if ( false === $image_meta ) {
+		if ( false === $full_meta ) {
 			continue;
 		}
 
-		if ( isset( $image_meta['sources'][ $mime_type ] ) ) {
-			wp_update_attachment_metadata( $attachment_id, $image_meta );
+		if ( ! empty( $full_meta ) ) {
+			$image_meta['sources'][ $mime_type ] = _wp_get_sources_from_meta( $full_meta );
+			wp_update_attachment_metadata( $attachment_id, $full_meta );
 			continue;
 		}
 
