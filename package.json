@@ -29,8 +29,9 @@
 		"@wordpress/dependency-extraction-webpack-plugin": "4.0.2",
 		"@wordpress/e2e-test-utils": "8.1.1",
 		"@wordpress/scripts": "24.1.2",
+		"@octokit/rest": "16.26.0",
 		"autoprefixer": "^9.8.8",
-		"chalk": "5.1.0",
+		"chalk": "4.1.1",
 		"check-node-version": "4.2.1",
 		"commander": "9.2.0",
 		"copy-webpack-plugin": "11.0.0",
@@ -155,7 +156,8 @@
 		"regenerator-runtime": "0.13.9",
 		"twemoji": "14.0.2",
 		"underscore": "1.13.6",
-		"whatwg-fetch": "3.6.2"
+		"whatwg-fetch": "3.6.2",
+		"simple-git": "3.5.0"
 	},
 	"scripts": {
 		"build": "grunt build",
