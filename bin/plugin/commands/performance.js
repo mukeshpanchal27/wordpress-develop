@@ -283,7 +283,7 @@ async function runPerformanceTests( branches, options ) {
 
 			log( `        >> Building the ${ fancyBranch } branch` );
 			await runShellScript(
-				'npm ci && npm run prebuild:packages && node ./bin/packages/build.js && npx wp-scripts build',
+				'npm ci && npm run build:dev',
 				buildPath
 			);
 		}
