@@ -24,12 +24,12 @@ const gitRepoOwner = 'WordPress';
  * @type {WPPluginCLIConfig}
  */
 const config = {
-	slug: 'gutenberg',
-	name: 'Gutenberg',
+	slug: 'wordpress-develop',
+	name: 'Wordpress Develop',
 	team: 'Gutenberg Core',
 	versionMilestoneFormat: '%(name)s %(major)s.%(minor)s',
 	githubRepositoryOwner: gitRepoOwner,
-	githubRepositoryName: 'gutenberg',
+	githubRepositoryName: 'wordpress-develop',
 	pluginEntryPoint: 'gutenberg.php',
 	buildZipCommand: '/bin/bash bin/build-plugin-zip.sh',
 	githubRepositoryURL: 'https://github.com/' + gitRepoOwner + '/gutenberg/',
