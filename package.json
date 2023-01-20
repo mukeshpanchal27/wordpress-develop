@@ -76,7 +76,8 @@
 		"wait-on": "6.0.1",
 		"webpack": "5.74.0",
 		"webpack-livereload-plugin": "3.0.2",
-		"inquirer": "7.1.0"
+		"inquirer": "7.1.0",
+		"worker-farm": "1.7.0"
 	},
 	"dependencies": {
 		"@wordpress/a11y": "3.17.1",
