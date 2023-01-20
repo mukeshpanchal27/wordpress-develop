@@ -36,61 +36,6 @@ const repositoryPathOption = [
 ];
 
 program
-	.command( 'publish-npm-packages-latest' )
-	.alias( 'npm-latest' )
-	.option( ...semverOption )
-	.option( ...ciOption )
-	.option( ...repositoryPathOption )
-	.description(
-		'Publishes to npm packages synced from the Gutenberg plugin (latest dist-tag, production version)'
-	)
-	.action( catchException( publishNpmGutenbergPlugin ) );
-
-program
-	.command( 'publish-npm-packages-bugfix-latest' )
-	.alias( 'npm-bugfix' )
-	.option( ...ciOption )
-	.option( ...repositoryPathOption )
-	.description(
-		'Publishes to npm bugfixes for packages (latest dist-tag, production version)'
-	)
-	.action( catchException( publishNpmBugfixLatest ) );
-
-program
-	.command( 'publish-npm-packages-wordpress-core' )
-	.alias( 'npm-wp' )
-	.requiredOption( '--wp-version <wpVersion>', 'WordPress version' )
-	.option( ...ciOption )
-	.option( ...repositoryPathOption )
-	.description(
-		'Publishes to npm bugfixes targeting WordPress core (wp-X.Y dist-tag, production version)'
-	)
-	.action( catchException( publishNpmBugfixWordPressCore ) );
-
-program
-	.command( 'publish-npm-packages-next' )
-	.alias( 'npm-next' )
-	.option( ...semverOption )
-	.option( ...ciOption )
-	.option( ...repositoryPathOption )
-	.description(
-		'Publishes to npm development version of packages (next dist-tag, prerelease version)'
-	)
-	.action( catchException( publishNpmNext ) );
-
-program
-	.command( 'release-plugin-changelog' )
-	.alias( 'changelog' )
-	.option( '-m, --milestone <milestone>', 'Milestone' )
-	.option( '-t, --token <token>', 'GitHub token' )
-	.option(
-		'-u, --unreleased',
-		"Only include PRs that haven't been included in a release yet"
-	)
-	.description( 'Generates a changelog from merged Pull Requests' )
-	.action( catchException( getReleaseChangelog ) );
-
-program
 	.command( 'performance-tests [branches...]' )
 	.alias( 'perf' )
 	.option( ...ciOption )
