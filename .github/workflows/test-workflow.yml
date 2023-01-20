@@ -92,3 +92,8 @@ jobs:
 
       - name: Install WordPress
         run: npm run env:install
+        
+      - name: Show GitHub context
+  env:
+    GITHUB_CONTEXT: ${{ toJson(github) }}
+  run: echo "$GITHUB_CONTEXT"
