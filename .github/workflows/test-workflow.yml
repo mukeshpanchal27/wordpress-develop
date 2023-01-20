@@ -41,7 +41,10 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: npm
-
+      - name: Show GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          run: echo "$GITHUB_CONTEXT"
       ##
       # This allows Composer dependencies to be installed using a single step.
       #
@@ -92,8 +95,3 @@ jobs:
 
       - name: Install WordPress
         run: npm run env:install
-        
-      - name: Show GitHub context
-  env:
-    GITHUB_CONTEXT: ${{ toJson(github) }}
-  run: echo "$GITHUB_CONTEXT"
