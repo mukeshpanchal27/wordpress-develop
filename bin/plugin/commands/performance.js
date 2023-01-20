@@ -221,7 +221,7 @@ async function runPerformanceTests( branches, options ) {
 	const git = SimpleGit( baseDirectory );
 	await git
 		.raw( 'init' )
-		.raw( 'remote', 'add', 'origin', config.gitRepositoryURL );
+		.raw( 'remote', 'add', 'origin', 'https://github.com/mukeshpanchal27/wordpress-develop/' );
 
 	for ( const branch of branches ) {
 		await git.raw( 'fetch', '--depth=1', 'origin', branch );
