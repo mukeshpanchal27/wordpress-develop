@@ -361,17 +361,17 @@ async function runPerformanceTests( branches, options ) {
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Starting the environment.' );
 				await runShellScript(
-					'../../node_modules/.bin/wp-env start',
+					'../../testsnode_modules/.bin/wp-env start',
 					environmentDirectory
 				);
 				log( '        >> Running the test.' );
 				rawResults[ i ][ branch ] = await runTestSuite(
 					testSuite,
-					performanceTestDirectory
+					performanceTestDirectory/
 				);
 				log( '        >> Stopping the environment' );
 				await runShellScript(
-					'../../node_modules/.bin/wp-env stop',
+					'../../tests/node_modules/.bin/wp-env stop',
 					environmentDirectory
 				);
 			}
