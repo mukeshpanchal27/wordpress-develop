@@ -14,7 +14,7 @@ fs.mkdirSync( baseDirectory, { recursive: true } );
 
 const rootDirectory = getRandomTemporaryPath();
 const performanceTestDirectory = rootDirectory + '/tests';
-await runShellScript( 'mkdir -p ' + rootDirectory );
+runShellScript( 'mkdir -p ' + rootDirectory );
 await runShellScript(
     'cp -R ' + baseDirectory + ' ' + performanceTestDirectory
 );
