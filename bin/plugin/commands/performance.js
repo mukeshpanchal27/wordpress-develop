@@ -361,7 +361,7 @@ async function runPerformanceTests( branches, options ) {
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Starting the environment. {performanceTestDirectory} After' );
 				await runShellScript(
-					'node_modules/.bin/wp-env start',
+					'../../tests/node_modules/.bin/wp-env start',
 					environmentDirectory
 				);
 				log( '        >> Running the test.' );
@@ -371,7 +371,7 @@ async function runPerformanceTests( branches, options ) {
 				);
 				log( '        >> Stopping the environment' );
 				await runShellScript(
-					'node_modules/.bin/wp-env stop',
+					'../../tests/node_modules/.bin/wp-env stop',
 					environmentDirectory
 				);
 			}
