@@ -367,7 +367,7 @@ async function runPerformanceTests( branches, options ) {
 				log( '        >> Running the test.' );
 				rawResults[ i ][ branch ] = await runTestSuite(
 					testSuite,
-					performanceTestDirectory/
+					performanceTestDirectory
 				);
 				log( '        >> Stopping the environment' );
 				await runShellScript(
