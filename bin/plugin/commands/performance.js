@@ -359,7 +359,7 @@ async function runPerformanceTests( branches, options ) {
 				// @ts-ignore
 				const environmentDirectory = branchDirectories[ branch ];
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
-				log( '        >> Starting the environment.'+performanceTestDirectory );
+				log( '        >> Starting the environment. {performanceTestDirectory} After' );
 				await runShellScript(
 					'../../tests/node_modules/.bin/wp-env start',
 					environmentDirectory
