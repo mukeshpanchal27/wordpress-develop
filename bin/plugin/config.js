@@ -1,4 +1,4 @@
-const gitRepoOwner = 'WordPress';
+const gitRepoOwner = 'mukeshpanchal27';
 
 /**
  * @typedef WPPluginCLIConfig
@@ -26,15 +26,15 @@ const gitRepoOwner = 'WordPress';
 const config = {
 	slug: 'wordpress-develop',
 	name: 'Wordpress Develop',
-	team: 'Gutenberg Core',
+	team: 'WordPress Core',
 	versionMilestoneFormat: '%(name)s %(major)s.%(minor)s',
 	githubRepositoryOwner: gitRepoOwner,
 	githubRepositoryName: 'wordpress-develop',
 	pluginEntryPoint: 'gutenberg.php',
 	buildZipCommand: '/bin/bash bin/build-plugin-zip.sh',
-	githubRepositoryURL: 'https://github.com/' + gitRepoOwner + '/gutenberg/',
-	wpRepositoryReleasesURL: 'https://github.com/WordPress/gutenberg/releases/',
-	gitRepositoryURL: 'https://github.com/' + gitRepoOwner + '/gutenberg.git',
+	githubRepositoryURL: 'https://github.com/' + gitRepoOwner + '/wordpress-develop/',
+	wpRepositoryReleasesURL: 'https://github.com/' + gitRepoOwner + '/wordpress-develop/releases/',
+	gitRepositoryURL: 'https://github.com/' + gitRepoOwner + '/wordpress-develop.git',
 	svnRepositoryURL: 'https://plugins.svn.wordpress.org/gutenberg',
 };
 
