@@ -1,0 +1,2 @@
+<?php
+    echo 'Plugin loaded';
