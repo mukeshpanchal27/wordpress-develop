@@ -1,0 +1,26 @@
+on:
+  pull_request:
+    branches:
+      - trunk
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Compare branches
+      id: compare
+      uses: jakejarvis/compare-branches-action@v1.4.1
+      with:
+        base: trunk
+        head: compare-branches
+        file: diff.txt
+    - name: Send Notifications
+      uses: actions/notify@v1
+      with:
+        message: 'Comparison Results'
+        attachments: diff.txt
+    - name: Merge branches
+      uses: actions/merge@v1
+      if: steps.compare.outputs.result == 'clean'
+      with:
+        branch: trunk
