@@ -22,12 +22,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install MU plugin
+      - name: Set up Docker Environment
+        run: |
+          npm run env:start
+
+      - name: Install WordPress
+        run: |
+          npm run env:install
+
+      - name: Debug information
         run: |
           pwd
           ls
+
+      - name: Install MU plugin
+        run: |
           mkdir ./wp-content/mu-plugins
           cp ./tests/performance/mu-plugin.php ./wp-content/mu-plugins/mu-plugin.php
-
-      - name: Set up WP environment
-        run: npm run env:start
