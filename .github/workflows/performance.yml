@@ -33,5 +33,5 @@
 
         - name: Install MU plugin
           run: |
-            mkdir ./wp-content/mu-plugins
-            cp ./tests/performance/mu-plugin.php ./wp-content/mu-plugins/mu-plugin.php
+            mkdir ./src/wp-content/mu-plugins
+            cp ./tests/performance/mu-plugin.php ./src/wp-content/mu-plugins/mu-plugin.php
