@@ -24,6 +24,8 @@ jobs:
 
       - name: Install MU plugin
         run: |
+          pwd
+          ls
           mkdir ./wp-content/mu-plugins
           cp ./tests/performance/mu-plugin.php ./wp-content/mu-plugins/mu-plugin.php
 
