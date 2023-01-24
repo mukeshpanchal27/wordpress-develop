@@ -1,41 +1,37 @@
-name: Performance
+  name: Performance
 
-on:
-  pull_request:
-    branches:
-      - trunk
+  on:
+    pull_request:
+      branches:
+        - trunk
 
-jobs:
-  performance:
-    runs-on: ubuntu-latest
+  jobs:
+    performance:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
 
-      - name: Use desired version of NodeJS
-        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
+        - name: Use desired version of NodeJS
+          uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+          with:
+            node-version-file: '.nvmrc'
+            cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+        - name: Install dependencies
+          run: npm ci
 
-      - name: Set up Docker Environment
-        run: |
-          npm run env:start
+        - name: Set up Docker Environment
+          run: |
+            npm run env:start
 
-      - name: Install WordPress
-        run: |
-          npm run env:install
+        - name: Debug information
+          run: |
+            pwd
+            ls
 
-      - name: Debug information
-        run: |
-          pwd
-          ls
-
-      - name: Install MU plugin
-        run: |
-          mkdir ./wp-content/mu-plugins
-          cp ./tests/performance/mu-plugin.php ./wp-content/mu-plugins/mu-plugin.php
+        - name: Install MU plugin
+          run: |
+            mkdir ./wp-content/mu-plugins
+            cp ./tests/performance/mu-plugin.php ./wp-content/mu-plugins/mu-plugin.php
