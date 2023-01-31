@@ -1,10 +1,12 @@
 name: Performance Tests
 
 on:
+  pull_request:
+    branches:
+      - trunk
   push:
     branches:
       - trunk
-      - pull_request
       - 'feature/**'
 
 jobs:
