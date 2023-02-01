@@ -29,6 +29,7 @@ jobs:
   # - Ensures version-controlled files are not modified or deleted.
   performance:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     if: ${{ github.repository == 'mukeshpanchal27/wordpress-develop' || github.event_name == 'push' }}
 
     steps:
