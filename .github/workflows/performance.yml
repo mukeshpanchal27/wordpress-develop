@@ -68,6 +68,7 @@ jobs:
         run: |
           mkdir ./src/wp-content/mu-plugins
           cp ./tests/performance/plugins/server-timing/mu-plugin.php ./src/wp-content/mu-plugins/server-timing.php
+          npm run env run tests-wordpress "chmod -c ugo+w /var/www/html"
 
       - name: Install WordPress
         run: npm run env:install
