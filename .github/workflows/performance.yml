@@ -9,6 +9,9 @@ on:
       - trunk
       - 'feature/**'
 
+env:
+  LOCAL_DIR: build
+
 jobs:
   # Runs the performance test suite.
   #
