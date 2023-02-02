@@ -399,6 +399,16 @@ async function runPerformanceTests( branches, options ) {
 					'npm run env:start',
 					environmentDirectory
 				);
+                log( '        >> Running the test.' );
+				rawResults[ i ][ branch ] = await runTestSuite(
+					testSuite,
+					performanceTestDirectory
+				);
+				log( '        >> Stopping the environment' );
+				await runShellScript(
+					'npm run env:stop',
+					environmentDirectory
+				);
 			}
 		}
 
