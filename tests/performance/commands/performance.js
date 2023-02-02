@@ -387,7 +387,7 @@ async function runPerformanceTests( branches, options ) {
 			rawResults[ i ] = {};
 			for ( const branch of branches ) {
 				// @ts-ignore
-                const environmentDirectory = branchDirectories[ branch ];
+                const environmentDirectory = branchDirectories[ branch ] + '/plugin';
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Installing branch dependencies.' );
 				await runShellScript(
