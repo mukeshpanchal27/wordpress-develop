@@ -387,21 +387,16 @@ async function runPerformanceTests( branches, options ) {
 			rawResults[ i ] = {};
 			for ( const branch of branches ) {
 				// @ts-ignore
-                const environmentDirectory = branchDirectories[ branch ] + '/plugin';
+                const environmentDirectory = branchDirectories[ branch ];
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
+				log( '        >> Installing branch dependencies.' );
+				await runShellScript(
+					'npm ci',
+					environmentDirectory
+				);
 				log( '        >> Starting the environment.' );
 				await runShellScript(
 					'npm run env:start',
-					environmentDirectory
-				);
-				log( '        >> Running the test.' );
-				rawResults[ i ][ branch ] = await runTestSuite(
-					testSuite,
-					performanceTestDirectory
-				);
-				log( '        >> Stopping the environment' );
-				await runShellScript(
-					'npm run env:stop',
 					environmentDirectory
 				);
 			}
