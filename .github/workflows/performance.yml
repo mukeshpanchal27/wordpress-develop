@@ -81,6 +81,9 @@ jobs:
           mkdir ./src/wp-content/mu-plugins
           cp ./tests/performance/plugins/server-timing/mu-plugin.php ./src/wp-content/mu-plugins/server-timing.php
 
+      - name: Install WordPress
+        run: npm run env:install
+
       - name: Run Performance tests
         run: npm run test:performance
 
