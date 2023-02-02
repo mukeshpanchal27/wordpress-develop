@@ -1,13 +1,20 @@
 name: Performance Tests
-
 on:
-  pull_request:
-    branches:
-      - trunk
   push:
     branches:
       - trunk
       - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
+    tags:
+      - '[0-9]+.[0-9]'
+      - '[0-9]+.[0-9].[0-9]+'
+  pull_request:
+    branches:
+      - trunk
+      - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
 
 env:
   LOCAL_DIR: build
@@ -33,6 +40,11 @@ jobs:
     if: ${{ github.repository == 'mukeshpanchal27/wordpress-develop' || github.event_name == 'push' }}
 
     steps:
+      - name: Configure environment variables
+        run: |
+          echo "PHP_FPM_UID=$(id -u)" >> $GITHUB_ENV
+          echo "PHP_FPM_GID=$(id -g)" >> $GITHUB_ENV
+
       - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
