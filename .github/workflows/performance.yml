@@ -59,23 +59,6 @@ jobs:
           docker -v
           docker-compose -v
 
-      - name: Build WordPress
-        run: npm run build
-
-      - name: Start Docker environment
-        run: npm run env:start
-
-      - name: WordPress Docker container debug information
-        run: |
-          docker-compose run --rm mysql mysql --version
-          docker-compose run --rm php php --version
-          docker-compose run --rm php php -m
-          docker-compose run --rm php php -i
-          docker-compose run --rm php locale -a
-
-      - name: Install WordPress
-        run: npm run env:install
-
       - name: Compare performance with trunk
         if: github.event_name == 'pull_request'
         run: node ./tests/performance/cli.js perf $GITHUB_SHA trunk --tests-branch $GITHUB_SHA
