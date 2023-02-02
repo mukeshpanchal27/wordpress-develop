@@ -16,9 +16,6 @@ on:
       - '3.[7-9]'
       - '[4-9].[0-9]'
 
-env:
-  LOCAL_DIR: build
-
 jobs:
   # Runs the performance test suite.
   #
