@@ -7,7 +7,8 @@ import { writeFileSync } from 'fs';
 /**
  * WordPress dependencies
  */
-import { createURL, logout } from '@wordpress/e2e-test-utils';
+import { createURL } from '@wordpress/e2e-test-utils';
+import { logout } from '../../../e2e-test-utils/src/logout.js';
 
 describe( 'Front End Performance', () => {
 	const results = {
