@@ -39,6 +39,7 @@ wp-tests-config.php
 /packagehash.txt
 /artifacts
 *-performance-results.json
+*.test.results.json
 
 # Files and folders that get created in wp-content
 /src/wp-content/blogs.dir
