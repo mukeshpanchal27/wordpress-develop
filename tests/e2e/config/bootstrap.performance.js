@@ -5,7 +5,6 @@ import {
 	clearLocalStorage,
 	enablePageDialogAccept,
 	setBrowserViewport,
-	trashAllPosts,
 } from '@wordpress/e2e-test-utils';
 
 /**
@@ -29,8 +28,6 @@ async function setupBrowser() {
 beforeAll( async () => {
 	enablePageDialogAccept();
 
-	await trashAllPosts();
-	await setupBrowser();
 	await page.emulateMediaFeatures( [
 		{ name: 'prefers-reduced-motion', value: 'reduce' },
 	] );
