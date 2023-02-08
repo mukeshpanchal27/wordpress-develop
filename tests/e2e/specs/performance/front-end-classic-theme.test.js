@@ -14,10 +14,6 @@ describe( 'Front End Performance', () => {
 		timeToFirstByte: [],
 	};
 
-	beforeAll( async () => {
-		await logout();
-	} );
-
 	afterAll( async () => {
 		const resultsFilename = basename( __filename, '.js' ) + '.results.json';
 		writeFileSync(
@@ -36,6 +32,7 @@ describe( 'Front End Performance', () => {
 			const navigationTimingJson = await page.evaluate( () =>
 				JSON.stringify( performance.getEntriesByType( 'navigation' ) )
 			);
+
 			const [ navigationTiming ] = JSON.parse( navigationTimingJson );
 			results.timeToFirstByte.push(
 				navigationTiming.responseStart - navigationTiming.startTime
