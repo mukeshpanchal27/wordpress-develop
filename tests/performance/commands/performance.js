@@ -191,8 +191,7 @@ function curateResults( testSuite, results ) {
  */
 async function runTestSuite( testSuite, performanceTestDirectory ) {
 	await runShellScript(
-		`wp-scripts test:e2e --config packages/e2e-tests/specs/performance/${ testSuite }.test.js`,
-		//`npm run test:e2e`,
+		`npm run test:e2e -- packages/e2e-tests/specs/performance/${ testSuite }.test.js`,
 		performanceTestDirectory
 	);
 	const rawResults = await readJSONFile(
