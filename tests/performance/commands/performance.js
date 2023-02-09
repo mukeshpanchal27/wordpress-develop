@@ -318,7 +318,7 @@ async function runPerformanceTests( branches, options ) {
 
 		log( '        >> Installing MU plugin.' );
 		await runShellScript(
-			'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php ./src/wp-content/mu-plugins/server-timing.php',
+			'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+performanceTestDirectory+'/src/wp-content/mu-plugins/server-timing.php',
 			environmentDirectory
 		);
 		
