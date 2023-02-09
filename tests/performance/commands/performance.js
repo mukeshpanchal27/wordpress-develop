@@ -407,7 +407,6 @@ async function runPerformanceTests( branches, options ) {
 					environmentDirectory
 				);
 				console.log( environmentDirectory );
-				console.log( ls );
 				log( '        >> Starting the environment.' );
 				await runShellScript(
 					'npm run env:start',
