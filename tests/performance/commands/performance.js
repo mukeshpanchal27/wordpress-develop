@@ -315,11 +315,11 @@ async function runPerformanceTests( branches, options ) {
 			// 	buildPath
 			// );
 
-			// log( '        >> Installing MU plugin.' );
-			// await runShellScript(
-			// 	'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php',
-			// 	environmentDirectory
-			// );
+			log( '        >> Installing MU plugin.' );
+			await runShellScript(
+				'mkdir '+performanceTestDirectory+'/build/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php',
+				environmentDirectory
+			);
 		}
 		
 		await runShellScript(
@@ -404,7 +404,7 @@ async function runPerformanceTests( branches, options ) {
 
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
-					'mkdir src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
+					'mkdir build/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php build/wp-content/mu-plugins/server-timing.php',
 					environmentDirectory
 				);
 
