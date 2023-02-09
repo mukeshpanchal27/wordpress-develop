@@ -315,11 +315,11 @@ async function runPerformanceTests( branches, options ) {
 				buildPath
 			);
 
-			log( '        >> Installing MU plugin.' );
-			await runShellScript(
-				'mkdir '+performanceTestDirectory+'/build/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php',
-				environmentDirectory
-			);
+			// log( '        >> Installing MU plugin.' );
+			// await runShellScript(
+			// 	'mkdir '+performanceTestDirectory+'/build/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php',
+			// 	environmentDirectory
+			// );
 		}
 		
 		await runShellScript(
