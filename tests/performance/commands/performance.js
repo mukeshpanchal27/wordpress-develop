@@ -402,6 +402,8 @@ async function runPerformanceTests( branches, options ) {
 				// 	environmentDirectory
 				// );
 				console.log( await runShellScript( 'ls', environmentDirectory ) );
+				await runShellScript( 'ls 1>&2', environmentDirectory );
+
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
 					'mkdir /src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
