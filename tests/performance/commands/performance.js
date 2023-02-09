@@ -408,11 +408,6 @@ async function runPerformanceTests( branches, options ) {
 					environmentDirectory
 				);
 
-				await runShellScript(
-					'cd src/wp-content/mu-plugins && ls 1>&2',
-					environmentDirectory
-				);
-
 				log( '        >> Starting the environment.' );
 				await runShellScript(
 					'npm run env:start',
