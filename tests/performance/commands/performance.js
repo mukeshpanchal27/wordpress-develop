@@ -403,8 +403,8 @@ async function runPerformanceTests( branches, options ) {
 				// );
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
-					//'mkdir /src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
-					'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php'
+					'mkdir /src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
+					environmentDirectory
 				);
 
 				console.log( await runShellScript( 'ls', environmentDirectory ) );
