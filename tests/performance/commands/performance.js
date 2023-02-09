@@ -407,7 +407,7 @@ async function runPerformanceTests( branches, options ) {
 					'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+environmentDirectory+'/src/wp-content/mu-plugins/server-timing.php'
 				);
 
-				await runShellScript( 'ls', environmentDirectory );
+				console.log( await runShellScript( 'ls', environmentDirectory ) );
 				log( '        >> Starting the environment.' );
 				await runShellScript(
 					'npm run env:start',
