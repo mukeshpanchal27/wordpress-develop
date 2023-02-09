@@ -397,14 +397,19 @@ async function runPerformanceTests( branches, options ) {
                 const environmentDirectory = branchDirectories[ branch ] + '/plugin';
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Installing branch dependencies.' );
-				// await runShellScript(
-				// 	'npm ci',
-				// 	environmentDirectory
-				// );
+				await runShellScript(
+					'npm ci',
+					environmentDirectory
+				);
 
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
 					'mkdir src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
+					environmentDirectory
+				);
+
+				await runShellScript(
+					'cd src/wp-content/mu-plugins && ls 1>&2',
 					environmentDirectory
 				);
 
