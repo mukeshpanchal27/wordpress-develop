@@ -314,13 +314,13 @@ async function runPerformanceTests( branches, options ) {
 				'npm ci && npm run build',
 				buildPath
 			);
-		}
 
-		log( '        >> Installing MU plugin.' );
-		await runShellScript(
-			'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+performanceTestDirectory+'/src/wp-content/mu-plugins/server-timing.php',
-			environmentDirectory
-		);
+			log( '        >> Installing MU plugin.' );
+			await runShellScript(
+				'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+performanceTestDirectory+'/src/wp-content/mu-plugins/server-timing.php',
+				environmentDirectory
+			);
+		}
 		
 		await runShellScript(
 			'cp ' +
