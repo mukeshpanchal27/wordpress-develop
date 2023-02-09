@@ -398,7 +398,7 @@ async function runPerformanceTests( branches, options ) {
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Installing branch dependencies.' );
 				await runShellScript(
-					'npm ci',
+					'npm ci && npm run build',
 					environmentDirectory
 				);
 
