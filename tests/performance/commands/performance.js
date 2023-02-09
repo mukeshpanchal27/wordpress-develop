@@ -274,11 +274,11 @@ async function runPerformanceTests( branches, options ) {
 			.raw( 'checkout', options.testsBranch );
 	}
 
-	log( '    >> Installing dependencies and building packages' );
-	await runShellScript(
-		'npm ci && npm run build',
-		performanceTestDirectory
-	);
+	// log( '    >> Installing dependencies and building packages' );
+	// await runShellScript(
+	// 	'npm ci && npm run build',
+	// 	performanceTestDirectory
+	// );
 	log( '    >> Creating the environment folders' );
 	await runShellScript( 'mkdir -p ' + rootDirectory + '/envs' );
 
@@ -309,11 +309,11 @@ async function runPerformanceTests( branches, options ) {
 			// @ts-ignore
 			await SimpleGit( buildPath ).reset( 'hard' ).checkout( branch );
 
-			log( `        >> Building the ${ fancyBranch } branch` );
-			await runShellScript(
-				'npm ci && npm run build',
-				buildPath
-			);
+			// log( `        >> Building the ${ fancyBranch } branch` );
+			// await runShellScript(
+			// 	'npm ci && npm run build',
+			// 	buildPath
+			// );
 
 			// log( '        >> Installing MU plugin.' );
 			// await runShellScript(
@@ -397,10 +397,10 @@ async function runPerformanceTests( branches, options ) {
                 const environmentDirectory = branchDirectories[ branch ] + '/plugin';
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Installing branch dependencies.' );
-				await runShellScript(
-					'npm ci',
-					environmentDirectory
-				);
+				// await runShellScript(
+				// 	'npm ci',
+				// 	environmentDirectory
+				// );
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
 					//'mkdir /src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php src/wp-content/mu-plugins/server-timing.php',
