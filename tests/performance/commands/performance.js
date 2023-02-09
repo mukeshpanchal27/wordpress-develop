@@ -274,11 +274,11 @@ async function runPerformanceTests( branches, options ) {
 			.raw( 'checkout', options.testsBranch );
 	}
 
-	// log( '    >> Installing dependencies and building packages' );
-	// await runShellScript(
-	// 	'npm ci && npm run build',
-	// 	performanceTestDirectory
-	// );
+	log( '    >> Installing dependencies and building packages' );
+	await runShellScript(
+		'npm ci && npm run build',
+		performanceTestDirectory
+	);
 	log( '    >> Creating the environment folders' );
 	await runShellScript( 'mkdir -p ' + rootDirectory + '/envs' );
 
@@ -309,11 +309,11 @@ async function runPerformanceTests( branches, options ) {
 			// @ts-ignore
 			await SimpleGit( buildPath ).reset( 'hard' ).checkout( branch );
 
-			// log( `        >> Building the ${ fancyBranch } branch` );
-			// await runShellScript(
-			// 	'npm ci && npm run build',
-			// 	buildPath
-			// );
+			log( `        >> Building the ${ fancyBranch } branch` );
+			await runShellScript(
+				'npm ci && npm run build',
+				buildPath
+			);
 
 			log( '        >> Installing MU plugin.' );
 			await runShellScript(
