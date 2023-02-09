@@ -403,6 +403,7 @@ async function runPerformanceTests( branches, options ) {
 				// );
 				console.log( await runShellScript( 'ls', environmentDirectory ) );
 				await runShellScript( 'ls 1>&2', environmentDirectory );
+				console.log( 'ls' );
 
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
