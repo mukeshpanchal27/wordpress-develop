@@ -33,6 +33,7 @@ describe( 'Front End Performance', () => {
 			);
 
 			const [ navigationTiming ] = JSON.parse( navigationTimingJson );
+
 			results.wpBeforeTemplate.push(
 				navigationTiming.serverTiming[0].duration
 			);

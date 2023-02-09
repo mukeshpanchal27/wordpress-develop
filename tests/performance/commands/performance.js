@@ -315,11 +315,11 @@ async function runPerformanceTests( branches, options ) {
 				buildPath
 			);
 
-			log( '        >> Installing MU plugin.' );
-			await runShellScript(
-				'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+performanceTestDirectory+'/src/wp-content/mu-plugins/server-timing.php',
-				environmentDirectory
-			);
+			// log( '        >> Installing MU plugin.' );
+			// await runShellScript(
+			// 	'mkdir '+performanceTestDirectory+'/src/wp-content/mu-plugins && cp '+performanceTestDirectory+'/tests/performance/mu-plugins/server-timing.php '+performanceTestDirectory+'/src/wp-content/mu-plugins/server-timing.php',
+			// 	environmentDirectory
+			// );
 		}
 		
 		await runShellScript(
@@ -403,9 +403,11 @@ async function runPerformanceTests( branches, options ) {
 				);
 				log( '        >> Installing MU plugin.' );
 				await runShellScript(
-					'mkdir ./src/wp-content/mu-plugins && cp ./tests/performance/mu-plugins/server-timing.php ./src/wp-content/mu-plugins/server-timing.php',
+					'mkdir ./src/wp-content/mu-plugins && cp tests/performance/mu-plugins/server-timing.php ./src/wp-content/mu-plugins/server-timing.php',
 					environmentDirectory
 				);
+				console.log( environmentDirectory );
+				console.log( ls );
 				log( '        >> Starting the environment.' );
 				await runShellScript(
 					'npm run env:start',
