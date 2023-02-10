@@ -57,9 +57,6 @@ jobs:
       - name: Build WordPress
         run: npm run build
 
-      - name: Start Docker environment
-        run: npm run env:start
-
       - name: WordPress Docker container debug information
         run: |
           docker -v
@@ -74,9 +71,6 @@ jobs:
         run: |
           mkdir ./src/wp-content/mu-plugins
           cp ./tests/performance/mu-plugins/server-timing.php ./src/wp-content/mu-plugins/server-timing.php
-
-      - name: Install WordPress
-        run: npm run env:install
 
       - name: Compare performance with trunk
         if: github.event_name == 'pull_request'
