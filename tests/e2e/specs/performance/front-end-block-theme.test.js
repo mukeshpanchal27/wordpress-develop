@@ -28,19 +28,24 @@ describe( 'Front End Performance', () => {
 		);
 	} );
 
-	it( 'Time To First Byte (TTFB)', async () => {
-		// We derive the 75th percentile of the TTFB based on these results.
-		// By running it 16 times, the percentile value would be (75/100)*16=12,
-		// meaning that we discard the worst 4 values.
-		let i = 16;
+	it( 'Server Timing Metrics', async () => {
+		let i = 20;
 		while ( i-- ) {
 			await page.goto( createURL( '/' ) );
 			const navigationTimingJson = await page.evaluate( () =>
 				JSON.stringify( performance.getEntriesByType( 'navigation' ) )
 			);
+
 			const [ navigationTiming ] = JSON.parse( navigationTimingJson );
-			results.timeToFirstByte.push(
-				navigationTiming.responseStart - navigationTiming.startTime
+
+			results.wpBeforeTemplate.push(
+				navigationTiming.serverTiming[0].duration
+			);
+			results.wpTemplate.push(
+				navigationTiming.serverTiming[1].duration
+			);
+			results.wpTotal.push(
+				navigationTiming.serverTiming[2].duration
 			);
 		}
 	} );
