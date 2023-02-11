@@ -24,12 +24,14 @@ jobs:
   # - Sets environment variables.
   # - Checks out the repository.
   # - Sets up Node.js.
+  # - Log debug information.
   # - Installs npm dependencies.
   # - Builds WordPress to run from the `build` directory.
   # - Starts the WordPress Docker container.
   # - Logs the running Docker containers.
-  # - Install Server-Timing MU plugin.
-  # - Install WordPress within the Docker container.
+  # - Logs Docker debug info.
+  # - Installs the Server Timing MU plugin.
+  # - Installs WordPress.
   # - Run the Performance tests.
   # - Ensures version-controlled files are not modified or deleted.
   performance:
@@ -51,13 +53,29 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
 
-      - name: Install npm dependencies
+      - name: Log debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
+          locale -a
+
+      - name: Install npm Dependencies
         run: npm ci
 
       - name: Build WordPress
         run: npm run build
 
-      - name: WordPress Docker container debug information
+      - name: Start Docker environment
+        run: |
+          npm run env:start
+
+      - name: Log running Docker containers
+        run: docker ps -a
+
+      - name: Docker debug information
         run: |
           docker -v
           docker-compose -v
@@ -71,6 +89,9 @@ jobs:
         run: |
           mkdir ./src/wp-content/mu-plugins
           cp ./tests/performance/mu-plugins/server-timing.php ./src/wp-content/mu-plugins/server-timing.php
+
+      - name: Install WordPress
+        run: npm run env:install
 
       - name: Compare performance with trunk
         if: github.event_name == 'pull_request'
