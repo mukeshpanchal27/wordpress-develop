@@ -42,6 +42,7 @@ function runShellScript( script, cwd, env = {} ) {
 					reject( error );
 				} else {
 					resolve( true );
+					console.log( _ );
 				}
 			}
 		);
