@@ -192,13 +192,13 @@ function curateResults( testSuite, results ) {
 async function runTestSuite( testSuite, performanceTestDirectory ) {
 	await runShellScript(
 		//`npm run test:performance -- packages/e2e-tests/specs/performance/${ testSuite }.test.js`,
-		`npm run test:performance tests/e2e/specs/performance/${ testSuite }.test.js`,
+		`npm run test:performance tests/performance/specs/${ testSuite }.test.js`,
 		performanceTestDirectory
 	);
 	const rawResults = await readJSONFile(
 		path.join(
 			performanceTestDirectory,
-			`tests/e2e/specs/performance/${ testSuite }.test.results.json`
+			`tests/performance/specs/${ testSuite }.test.results.json`
 		)
 	);
 	return curateResults( testSuite, rawResults );
@@ -322,16 +322,16 @@ async function runPerformanceTests( branches, options ) {
 			// );
 		}
 		
-		await runShellScript(
-			'cp ' +
-				path.resolve(
-					performanceTestDirectory,
-					'tests/performance/.wp-env.performance.json'
-				) +
-				' ' +
-				environmentDirectory +
-				'/.wp-env.json'
-		);
+		// await runShellScript(
+		// 	'cp ' +
+		// 		path.resolve(
+		// 			performanceTestDirectory,
+		// 			'tests/performance/.wp-env.performance.json'
+		// 		) +
+		// 		' ' +
+		// 		environmentDirectory +
+		// 		'/.wp-env.json'
+		// );
 
 		if ( options.wpVersion ) {
 			// In order to match the topology of ZIP files at wp.org, remap .0
