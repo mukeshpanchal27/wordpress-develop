@@ -398,7 +398,7 @@ async function runPerformanceTests( branches, options ) {
 				log( `    >> Branch: ${ branch }, Suite: ${ testSuite }` );
 				log( '        >> Installing branch dependencies.' );
 				await runShellScript(
-					'npm ci',
+					'npm ci && npm run build',
 					environmentDirectory
 				);
 
@@ -413,13 +413,9 @@ async function runPerformanceTests( branches, options ) {
 					'cd src/wp-content/mu-plugins && ls -l',
 					environmentDirectory
 				);
-				await runShellScript(
-					'cd tests/performance/mu-plugins && ls -l',
-					environmentDirectory
-				);
 
 				await runShellScript(
-					'npm run build',
+					'cd tests/performance/mu-plugins && ls -l',
 					environmentDirectory
 				);
 
