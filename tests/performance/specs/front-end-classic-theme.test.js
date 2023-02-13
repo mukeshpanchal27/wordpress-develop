@@ -9,16 +9,16 @@ import { writeFileSync } from 'fs';
  */
 import { activateTheme, createURL } from '@wordpress/e2e-test-utils';
 
-describe( 'Server Timing – Twenty Twenty One', () => {
+describe( 'Server Timing - Twenty Twenty One', () => {
 	const results = {
 		wpBeforeTemplate: [],
 		wpTemplate: [],
 		wpTotal: [],
 	};
 
-	beforeAll( async () => {
-		await activateTheme( 'twentytwentyone' );
-	} );
+	// beforeAll( async () => {
+	// 	await activateTheme( 'twentytwentyone' );
+	// } );
 
 	afterAll( async () => {
 		const resultsFilename = basename( __filename, '.js' ) + '.results.json';
