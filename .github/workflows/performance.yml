@@ -65,9 +65,6 @@ jobs:
       - name: Install npm Dependencies
         run: npm ci
 
-      - name: Build WordPress
-        run: npm run build
-
       - name: Log running Docker containers
         run: docker ps -a
 

@@ -1,4 +1,4 @@
-const gitRepoOwner = '10up';
+const gitRepoOwner = 'mukeshpanchal27';
 
 const config = {
 	slug: 'wordpress-develop',
