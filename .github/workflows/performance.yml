@@ -104,6 +104,8 @@ jobs:
           curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
           npm run env:cli -- import themeunittestdata.wordpress.xml --authors=create
           rm themeunittestdata.wordpress.xml
+          npm run env:cli -- rewrite structure '/%year%/%monthnum%/%postname%/'
+          npm run env:cli -- menu location assign all-pages primary
 
       - name: Install MU plugin
         run: |
