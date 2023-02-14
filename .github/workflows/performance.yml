@@ -40,8 +40,10 @@ jobs:
   # - Starts the WordPress Docker container.
   # - Logs the running Docker containers.
   # - Logs Docker debug info.
-  # - Installs the Server Timing MU plugin.
   # - Installs WordPress.
+  # - Installs the Server Timing MU plugin.
+  # - Install wordpress importer plugin and import dummy data.
+  # - Update permalink structure.
   # - Run the Performance tests.
   # - Ensures version-controlled files are not modified or deleted.
   performance:
@@ -104,6 +106,9 @@ jobs:
           curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
           npm run env:cli -- import themeunittestdata.wordpress.xml --authors=create
           rm themeunittestdata.wordpress.xml
+
+      - name: Update permalink structure
+        run: |
           npm run env:cli -- rewrite structure '/%year%/%monthnum%/%postname%/'
 
       - name: Install MU plugin
