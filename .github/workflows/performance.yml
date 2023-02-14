@@ -97,7 +97,11 @@ jobs:
 
       - name: Install plugin
         run: |
-          wp plugin install woocommerce --activate
+          npm run env:cli wp plugin install woocommerce --activate
+          docker-compose exec -T php git clone https://github.com/WordPress/wordpress-importer.git ./build/wp-content/plugins --depth=1
+          curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
+          docker-compose run --rm cli wp import themeunittestdata.wordpress.xml --authors=create
+          rm themeunittestdata.wordpress.xml
 
       - name: Install MU plugin
         run: |
