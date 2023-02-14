@@ -97,7 +97,7 @@ jobs:
 
       - name: Install plugin
         run: |
-          docker-compose run --rm cli wp plugin install wordpress-importer -- --activate
+          docker-compose exec -T php git clone https://github.com/WordPress/wordpress-importer.git ./build/wp-content/plugins --depth=1
           curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
           docker-compose run --rm cli wp import themeunittestdata.wordpress.xml --authors=create
           rm themeunittestdata.wordpress.xml
