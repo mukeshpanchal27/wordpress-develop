@@ -99,6 +99,7 @@ jobs:
         run: |
           ls -l
           ls -l build
+          ls -l src
           npm run env:cli -- plugin install wordpress-importer --activate
           curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
           npm run env:cli -- import themeunittestdata.wordpress.xml --authors=create
