@@ -1,0 +1,110 @@
+name: Performance Tests
+
+on:
+  push:
+    branches:
+      - trunk
+      - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
+    tags:
+      - '[0-9]+.[0-9]'
+      - '[0-9]+.[0-9].[0-9]+'
+  pull_request:
+    branches:
+      - trunk
+      - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+env:
+  LOCAL_DIR: build
+
+jobs:
+  # Runs the performance test suite.
+  #
+  # Performs the following steps:
+  # - Sets environment variables.
+  # - Checks out the repository.
+  # - Sets up Node.js.
+  # - Log debug information.
+  # - Installs npm dependencies.
+  # - Builds WordPress to run from the `build` directory.
+  # - Starts the WordPress Docker container.
+  # - Logs the running Docker containers.
+  # - Logs Docker debug info.
+  # - Installs the Server Timing MU plugin.
+  # - Installs WordPress.
+  # - Run the Performance tests.
+  # - Ensures version-controlled files are not modified or deleted.
+  performance:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'mukeshpanchal27/wordpress-develop' || github.event_name == 'push' }}
+
+    steps:
+      - name: Configure environment variables
+        run: |
+          echo "PHP_FPM_UID=$(id -u)" >> $GITHUB_ENV
+          echo "PHP_FPM_GID=$(id -g)" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Log debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
+          locale -a
+
+      - name: Install npm Dependencies
+        run: npm ci
+
+      - name: Build WordPress
+        run: npm run build
+
+      - name: Start Docker environment
+        run: |
+          npm run env:start
+
+      - name: Log running Docker containers
+        run: docker ps -a
+
+      - name: Docker debug information
+        run: |
+          docker -v
+          docker-compose -v
+          docker-compose run --rm mysql mysql --version
+          docker-compose run --rm php php --version
+          docker-compose run --rm php php -m
+          docker-compose run --rm php php -i
+          docker-compose run --rm php locale -a
+
+      - name: Install MU plugin
+        run: |
+          mkdir ./build/wp-content/mu-plugins
+          cp ./tests/performance/mu-plugins/server-timing.php ./build/wp-content/mu-plugins/server-timing.php
+
+      - name: Install WordPress
+        run: npm run env:install
+
+      - name: Run Performance tests
+        run: npm run test:performance
+
+      - name: Ensure version-controlled files are not modified or deleted
+        run: git diff --exit-code
