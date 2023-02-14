@@ -97,9 +97,9 @@ jobs:
 
       - name: Install plugin
         run: |
-          docker-compose run --rm cli ${cmd} wp plugin install wordpress-importer -- --activate
+          docker-compose run --rm cli wp plugin install wordpress-importer -- --activate
           curl -O https://raw.githubusercontent.com/WPTT/theme-unit-test/master/themeunittestdata.wordpress.xml
-          docker-compose run --rm cli ${cmd} wp import themeunittestdata.wordpress.xml --authors=create
+          docker-compose run --rm cli wp import themeunittestdata.wordpress.xml --authors=create
           rm themeunittestdata.wordpress.xml
 
       - name: Install MU plugin
