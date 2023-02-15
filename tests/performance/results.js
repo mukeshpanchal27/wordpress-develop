@@ -6,7 +6,7 @@ const testSuites = [
     'front-end-block-theme',
 ];
 
-console.log( '\n>> 🎉 Results.\n' );
+console.log( '\n>> 🎉 Results 🎉 \n' );
 
 for ( const testSuite of testSuites ) {
     const resultsFilename = __dirname + '/specs/' + testSuite + '.test.results.json';
