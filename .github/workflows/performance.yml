@@ -121,7 +121,7 @@ jobs:
         run: npm run test:performance
 
       - name: Print Performance tests results
-        run: "node ./tests/performance/results.js",
+        run: "node ./tests/performance/results.js"
 
       - name: Ensure version-controlled files are not modified or deleted
         run: git diff --exit-code
