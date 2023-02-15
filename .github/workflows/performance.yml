@@ -119,5 +119,8 @@ jobs:
       - name: Run Performance tests
         run: npm run test:performance
 
+      - name: Run Performance tests
+        run: "node ./tests/performance/results.js",
+
       - name: Ensure version-controlled files are not modified or deleted
         run: git diff --exit-code
