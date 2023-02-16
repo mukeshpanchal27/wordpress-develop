@@ -2,8 +2,8 @@
 
 const fs = require('fs');
 const testSuites = [
-    'front-end-classic-theme',
-    'front-end-block-theme',
+    'home-classic-theme',
+    'home-block-theme',
 ];
 
 console.log( '\n>> 🎉 Results 🎉 \n' );
