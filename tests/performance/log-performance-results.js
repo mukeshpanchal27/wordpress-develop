@@ -23,6 +23,14 @@ const performanceResults = resultsFiles.map( ( { file } ) =>
 	)
 );
 
+function median( array ) {
+	const mid = Math.floor( array.length / 2 ),
+		numbers = [ ...array ].sort( ( a, b ) => a - b );
+	return array.length % 2 !== 0
+		? numbers[ mid ]
+		: ( numbers[ mid - 1 ] + numbers[ mid ] ) / 2;
+}
+
 const rawResults = [];
 for (var keys in performanceResults) {
     const rawKeys = [];
