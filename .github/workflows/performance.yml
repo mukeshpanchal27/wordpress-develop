@@ -123,5 +123,12 @@ jobs:
       - name: Print Performance tests results
         run: "node ./tests/performance/results.js"
 
+      - name: Publish performance results
+        env:
+            COMMITTED_AT: ${{ steps.commit-timestamp.outputs.result }}
+            CODEHEALTH_PROJECT_TOKEN: ${{ secrets.CODEHEALTH_PROJECT_TOKEN }}
+        run: ./bin/log-performance-results.js $CODEHEALTH_PROJECT_TOKEN trunk $GITHUB_SHA debd225d007f4e441ceec80fbd6fa96653f94737 $COMMITTED_AT
+
+
       - name: Ensure version-controlled files are not modified or deleted
         run: git diff --exit-code

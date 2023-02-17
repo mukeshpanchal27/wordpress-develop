@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+import { fs } from 'fs';
 const testSuites = [
     'home-classic-theme',
     'home-block-theme',
