@@ -6,16 +6,14 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const https = require( 'https' );
-const [ token, branch, hash, baseHash, timestamp ] = process.argv.slice( 2 );
+const [ token, branch, hash, timestamp ] = process.argv.slice( 2 );
 
 const resultsFiles = [
 	{
 		file: 'home-block-theme.test.results.json',
-		metricsPrefix: 'block-theme-',
 	},
 	{
 		file: 'home-classic-theme.test.results.json',
-		metricsPrefix: 'classic-theme-',
 	},
 ];
 
@@ -25,41 +23,23 @@ const performanceResults = resultsFiles.map( ( { file } ) =>
 	)
 );
 
+const rawResults = [];
+for (var keys in performanceResults) {
+    const rawKeys = [];
+    for (var key in performanceResults[keys]) {
+        rawKeys[key] = median( performanceResults[keys][key] );
+    }
+    rawResults.push( rawKeys );
+}
+
 const data = new TextEncoder().encode(
 	JSON.stringify( {
 		branch,
 		hash,
-		baseHash,
+        baseHash: '',
 		timestamp: parseInt( timestamp, 10 ),
-		metrics: resultsFiles.reduce( ( result, { metricsPrefix }, index ) => {
-			return {
-				...result,
-				...Object.fromEntries(
-					Object.entries(
-						performanceResults[ index ][ hash ] ?? {}
-					).map( ( [ key, value ] ) => [
-						metricsPrefix + key,
-						value,
-					] )
-				),
-			};
-		}, {} ),
-		baseMetrics: resultsFiles.reduce(
-			( result, { metricsPrefix }, index ) => {
-				return {
-					...result,
-					...Object.fromEntries(
-						Object.entries(
-							performanceResults[ index ][ baseHash ] ?? {}
-						).map( ( [ key, value ] ) => [
-							metricsPrefix + key,
-							value,
-						] )
-					),
-				};
-			},
-			{}
-		),
+		metrics: resultsFiles,
+        baseMetrics: '',
 	} )
 );
 
