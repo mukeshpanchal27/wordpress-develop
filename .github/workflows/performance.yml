@@ -1,0 +1,141 @@
+name: Performance Tests
+
+on:
+  push:
+    branches:
+      - trunk
+      - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
+    tags:
+      - '[0-9]+.[0-9]'
+      - '[0-9]+.[0-9].[0-9]+'
+  pull_request:
+    branches:
+      - trunk
+      - 'feature/**'
+      - '3.[7-9]'
+      - '[4-9].[0-9]'
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+env:
+  LOCAL_DIR: build
+
+jobs:
+  # Runs the performance test suite.
+  #
+  # Performs the following steps:
+  # - Sets environment variables.
+  # - Checks out the repository.
+  # - Sets up Node.js.
+  # - Log debug information.
+  # - Installs npm dependencies.
+  # - Builds WordPress to run from the `build` directory.
+  # - Starts the WordPress Docker container.
+  # - Logs the running Docker containers.
+  # - Logs Docker debug info.
+  # - Installs WordPress.
+  # - Installs the Server Timing MU plugin.
+  # - Install wordpress importer plugin and import dummy data.
+  # - Update permalink structure.
+  # - Run the Performance tests.
+  # - Print Performance tests results.
+  # - Ensures version-controlled files are not modified or deleted.
+  performance:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'mukeshpanchal27/wordpress-develop' || github.event_name == 'push' }}
+
+    steps:
+      - name: Configure environment variables
+        run: |
+          echo "PHP_FPM_UID=$(id -u)" >> $GITHUB_ENV
+          echo "PHP_FPM_GID=$(id -g)" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Log debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
+          locale -a
+
+      - name: Install npm Dependencies
+        run: npm ci
+
+      - name: Build WordPress
+        run: npm run build
+
+      - name: Start Docker environment
+        run: |
+          npm run env:start
+
+      - name: Log running Docker containers
+        run: docker ps -a
+
+      - name: Docker debug information
+        run: |
+          docker -v
+          docker-compose -v
+          docker-compose run --rm mysql mysql --version
+          docker-compose run --rm php php --version
+          docker-compose run --rm php php -m
+          docker-compose run --rm php php -i
+          docker-compose run --rm php locale -a
+
+      - name: Install WordPress
+        run: npm run env:install
+
+      - name: Install wordpress importer plugin and import dummy data
+        run: |
+          npm run env:cli -- plugin install wordpress-importer --activate
+          curl -O https://raw.githubusercontent.com/WPTT/theme-test-data/b9752e0533a5acbb876951a8cbb5bcc69a56474c/themeunittestdata.wordpress.xml
+          npm run env:cli -- import themeunittestdata.wordpress.xml --authors=create
+          rm themeunittestdata.wordpress.xml
+
+      - name: Update permalink structure
+        run: |
+          npm run env:cli -- rewrite structure '/%year%/%monthnum%/%postname%/'
+
+      - name: Install MU plugin
+        run: |
+          mkdir ./build/wp-content/mu-plugins
+          cp ./tests/performance/mu-plugins/server-timing.php ./build/wp-content/mu-plugins/server-timing.php
+
+      - name: Run Performance tests
+        run: npm run test:performance
+
+      - name: Print Performance tests results
+        run: "node ./tests/performance/results.js"
+
+      - uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975 # v6.4.0
+        id: commit-timestamp
+        with:
+            github-token: ${{secrets.GITHUB_TOKEN}}
+            script: |
+                const commit_details = await github.rest.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
+                return parseInt((new Date( commit_details.data.author.date ).getTime() / 1000).toFixed(0))
+      - name: Publish performance results
+
+        env:
+            COMMITTED_AT: ${{ steps.commit-timestamp.outputs.result }}
+            CODEHEALTH_PROJECT_TOKEN: ${{ secrets.CODEHEALTH_PROJECT_TOKEN }}
+        run: node ./tests/performance/log-performance-results.js $CODEHEALTH_PROJECT_TOKEN trunk $GITHUB_SHA debd225d007f4e441ceec80fbd6fa96653f94737 $COMMITTED_AT
+
+      - name: Ensure version-controlled files are not modified or deleted
+        run: git diff --exit-code
