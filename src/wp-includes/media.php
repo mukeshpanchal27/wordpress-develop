@@ -5440,11 +5440,15 @@ function wp_get_webp_info( $filename ) {
  *
  * @since 5.9.0
  *
+ * @global WP_Query $wp_query WordPress Query object.
+ *
  * @param string $context Context for the element for which the `loading` attribute value is requested.
  * @return string|bool The default `loading` attribute value. Either 'lazy', 'eager', or a boolean `false`, to indicate
  *                     that the `loading` attribute should be skipped.
  */
 function wp_get_loading_attr_default( $context ) {
+	global $wp_query;
+
 	// Skip lazy-loading for the overall block template, as it is handled more granularly.
 	if ( 'template' === $context ) {
 		return false;
@@ -5456,11 +5460,34 @@ function wp_get_loading_attr_default( $context ) {
 		return false;
 	}
 
+	// Conditionally skip lazy-loading on images before the loop.
+	static $special_content_contexts = array(
+		'wp_get_attachment_image' => true,
+		'the_post_thumbnail'      => true,
+	);
+	if (
+		isset( $special_content_contexts[ $context ] )
+		// Only apply for main query but before the loop.
+		&& $wp_query->before_loop && is_main_query()
+		/*
+		 * Any image before the loop, but after the header has started should not be lazy-loaded,
+		 * except when the footer has already started which can happen when the current template
+		 * does not include any loop.
+		 */
+		&& did_action( 'get_header' ) && ! did_action( 'get_footer' )
+	) {
+		return false;
+	}
+
 	/*
 	 * The first elements in 'the_content' or 'the_post_thumbnail' should not be lazy-loaded,
 	 * as they are likely above the fold.
 	 */
-	if ( 'the_content' === $context || 'the_post_thumbnail' === $context ) {
+	static $content_contexts = array(
+		'the_content'        => true,
+		'the_post_thumbnail' => true,
+	);
+	if ( isset( $content_contexts[ $context ] ) ) {
 		// Only elements within the main query loop have special handling.
 		if ( is_admin() || ! in_the_loop() || ! is_main_query() ) {
 			return 'lazy';
