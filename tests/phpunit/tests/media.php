@@ -3725,12 +3725,7 @@ EOF;
 	 * @param string $context Context for the element for which the `loading` attribute value is requested.
 	 */
 	public function test_wp_get_loading_attr_default_before_loop_in_main_query_but_header_not_called( $context ) {
-		global $wp_query, $wp_the_query;
-
 		$this->get_new_wp_query_and_reset_variables();
-
-		// Set current query as main query.
-		$wp_the_query = $wp_query;
 
 		// Lazy if header not called.
 		$this->assertSame( 'lazy', wp_get_loading_attr_default( $context ) );
