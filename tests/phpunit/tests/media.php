@@ -4077,7 +4077,7 @@ EOF;
 			'wp_get_attachment_image' => array( 'context' => 'wp_get_attachment_image' ),
 		);
 	}
-	
+
 	/**
 	 * Tests that the content media count is not affected by `the_excerpt()` calls for posts that contain images.
 	 *
@@ -4157,7 +4157,7 @@ EOF;
 		$featured_image_id = self::$large_id;
 		update_post_meta( $post_id, '_thumbnail_id', $featured_image_id );
 
-		$expected_output  = wpautop( '<p>Some text.</p>' );
+		$expected_output  = wpautop( 'Some text.' );
 		$expected_output .= get_the_post_thumbnail( $post_id, 'post-thumbnail', array( 'loading' => false ) );
 
 		$wp_query     = new WP_Query( array( 'post__in' => array( $post_id ) ) );
