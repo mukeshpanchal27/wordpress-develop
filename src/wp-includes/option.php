@@ -271,11 +271,11 @@ function prime_options( $options ) {
 		$option_names = implode( "','", array_map( 'esc_sql', $options_to_prime ) );
 		$query   = "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ('$option_names')";
 		$results = $wpdb->get_results( $query, OBJECT_K );
-		
+
 		foreach ( $results as $result ) {
 			$alloptions[ $result->option_name ] = maybe_unserialize( $result->option_value );
 		}
-		
+
 		wp_cache_set( 'alloptions', $alloptions, 'options' );
 	}
 }
