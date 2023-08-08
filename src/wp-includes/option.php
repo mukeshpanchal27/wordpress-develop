@@ -289,11 +289,11 @@ function prime_options( $options ) {
 		wp_cache_set( 'alloptions', $alloptions, 'options' );
 
 		$option_values = array();
-        foreach ( $results as $result ) {
-            $option_values[ $result->option_name ] = maybe_unserialize( $result->option_value );
-        }
+		foreach ( $results as $result ) {
+			$option_values[ $result->option_name ] = maybe_unserialize( $result->option_value );
+		}
 
-        wp_cache_set_multiple( $option_values, 'options' );
+		wp_cache_set_multiple( $option_values, 'options' );
 	}
 }
 
@@ -309,8 +309,8 @@ function prime_options( $options ) {
 function prime_options_by_group( $option_group ) {
 	global $new_allowed_options;
 
-    if ( isset( $new_allowed_options[ $option_group ] ) ) {
-        prime_options( $new_allowed_options[ $option_group ] );
+	if ( isset( $new_allowed_options[ $option_group ] ) ) {
+		prime_options( $new_allowed_options[ $option_group ] );
 	}
 }
 
@@ -1233,7 +1233,7 @@ function wp_user_settings() {
 		$cookie = preg_replace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE[ 'wp-settings-' . $user_id ] );
 
 		// No change or both empty.
-		if ( $cookie === $settings ) {
+		if ( $cookie == $settings ) {
 			return;
 		}
 
