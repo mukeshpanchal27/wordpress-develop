@@ -466,8 +466,8 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		// Check that the retrieved options are correct.
 		$this->assertEquals( get_option( 'option1' ), $options['option1'] );
 
-		// Check that the nonexistent option is not in the result array.
-		$this->assertArrayNotHasKey( 'nonexistent_option', $options );
+		// Check that the nonexistent option is in the result array.
+		$this->assertArrayHasKey( 'nonexistent_option', $options );
 	}
 
 	// Test prime_options_by_group with a nonexistent option group.
