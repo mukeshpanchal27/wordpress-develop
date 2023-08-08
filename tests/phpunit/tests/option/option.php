@@ -410,4 +410,40 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		$this->assertEquals( get_option( 'option1' ), $options['option1'] );
 		$this->assertEquals( get_option( 'option2' ), $options['option2'] );
 	}
+
+	// Test prime_options with an empty input array.
+	public function test_prime_options_with_empty_array() {
+		// Call the prime_options function with an empty array.
+		prime_options( array() );
+
+		// Make sure nothing is cached.
+		$this->assertFalse( wp_cache_get( 'alloptions', 'options' ) );
+	}
+
+	// Test prime_options with options that are already cached.
+	public function test_prime_options_with_cached_options() {
+		// Create some options to prime.
+		$options_to_prime = array(
+			'option1',
+			'option2',
+		);
+
+		// Prime the options.
+		prime_options( $options_to_prime );
+
+		// Cache the options again.
+		prime_options( $options_to_prime );
+
+		// Check that options are still in cache only once.
+		$this->assertEquals( 1, wp_cache_get( 'alloptions', 'options' ) );
+	}
+
+	// Test get_options with an empty input array.
+	public function test_get_options_with_empty_array() {
+		// Call the get_options function with an empty array.
+		$options = get_options( array() );
+
+		// Make sure the result is an empty array.
+		$this->assertEmpty( $options );
+	}
 }
