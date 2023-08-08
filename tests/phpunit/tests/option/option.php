@@ -425,4 +425,76 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		// Make sure the result is an empty array.
 		$this->assertEmpty( $options );
 	}
+
+	// Test prime_options with options that do not exist in the database.
+	public function test_prime_options_with_nonexistent_options() {
+		// Create some options to prime.
+		$options_to_prime = array(
+			'option1',
+			'option2',
+		);
+
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+
+		// Call the prime_options function to prime the options.
+		prime_options( $options_to_prime );
+
+		// Check that options are not in the cache or database.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+	}
+
+	// Test get_options with options that include some nonexistent options.
+	public function test_get_options_with_nonexistent_options() {
+		// Create some options to prime.
+		$options_to_prime = array(
+			'option1',
+		);
+
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'nonexistent_option', 'options' ) );
+
+		// Call the prime_options function to prime the options.
+		prime_options( $options_to_prime );
+
+		// Call the get_options function with an array that includes a nonexistent option.
+		$options = get_options( array( 'option1', 'nonexistent_option' ) );
+
+		// Check that the retrieved options are correct.
+		$this->assertEquals( get_option( 'option1' ), $options['option1'] );
+
+		// Check that the nonexistent option is not in the result array.
+		$this->assertArrayNotHasKey( 'nonexistent_option', $options );
+	}
+
+	// Test prime_options_by_group with a nonexistent option group.
+	public function test_prime_options_by_group_with_nonexistent_group() {
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+
+		// Call the prime_options_by_group function with a nonexistent group.
+		prime_options_by_group( 'nonexistent_group' );
+
+		// Check that options are still not in the cache or database.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+	}
+
+	// Test prime_options_by_group with a valid group but empty options.
+	public function test_prime_options_by_group_with_empty_options() {
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+
+		// Call the prime_options_by_group function with an empty group.
+		prime_options_by_group( 'group2' );
+
+		// Check that options are still not in the cache or database.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+	}
 }
