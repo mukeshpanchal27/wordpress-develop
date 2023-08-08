@@ -412,15 +412,17 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test get_options with an empty input array.
+	 *
 	 * @ticket 58962
-	 *
-	 * @dataProvider data_bad_option_names
-	 *
-	 * @param mixed $option_name Option name.
 	 *
 	 * @covers ::get_options
 	 */
-	public function test_get_options_bad_option_name( $option_name ) {
-		$this->assertFalse( get_options( $option_name ) );
+	public function test_get_options_with_empty_array() {
+		// Call the get_options function with an empty array.
+		$options = get_options( array() );
+
+		// Make sure the result is an empty array.
+		$this->assertEmpty( $options );
 	}
 }
