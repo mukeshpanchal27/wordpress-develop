@@ -312,4 +312,102 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			array( 'autoload_false', false, 'no' ),
 		);
 	}
+
+	/**
+	 * Test prime_options function.
+	 *
+	 * @ticket 58962
+	 *
+	 * @covers ::prime_options
+	 */
+	public function test_prime_options() {
+		// Create some options to prime.
+		$options_to_prime = array(
+			'option1',
+			'option2',
+			'option3',
+		);
+
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option3', 'options' ) );
+
+		// Call the prime_options function to prime the options.
+		prime_options( $options_to_prime );
+
+		// Check that options are now in the cache.
+		$this->assertEquals( get_option( 'option1' ), wp_cache_get( 'option1', 'options' ) );
+		$this->assertEquals( get_option( 'option2' ), wp_cache_get( 'option2', 'options' ) );
+		$this->assertEquals( get_option( 'option3' ), wp_cache_get( 'option3', 'options' ) );
+	}
+
+	/**
+	 * Test prime_options_by_group function.
+	 *
+	 * @ticket 58962
+	 *
+	 * @covers ::prime_options_by_group
+	 */
+	public function test_prime_options_by_group() {
+		// Create some options to prime.
+		$new_allowed_options = array(
+			'group1' => array(
+				'option1',
+				'option2',
+			),
+			'group2' => array(
+				'option3',
+			),
+		);
+
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option3', 'options' ) );
+
+		// Call the prime_options_by_group function to prime the options.
+		prime_options_by_group( 'group1' );
+
+		// Check that options are now in the cache.
+		$this->assertEquals( get_option( 'option1' ), wp_cache_get( 'option1', 'options' ) );
+		$this->assertEquals( get_option( 'option2' ), wp_cache_get( 'option2', 'options' ) );
+
+		// Make sure option3 is still not in cache.
+		$this->assertFalse( wp_cache_get( 'option3', 'options' ) );
+	}
+
+	/**
+	 * Test get_options function.
+	 *
+	 * @ticket 58962
+	 *
+	 * @covers ::prime_options
+	 * @covers ::get_options
+	 */
+	public function test_get_options() {
+		// Create some options to prime.
+		$options_to_prime = array(
+			'option1',
+			'option2',
+		);
+
+		// Make sure options are not in cache or database initially.
+		$this->assertFalse( wp_cache_get( 'option1', 'options' ) );
+		$this->assertFalse( wp_cache_get( 'option2', 'options' ) );
+
+		// Call the prime_options function to prime the options.
+		prime_options( $options_to_prime );
+
+		// Check that options are now in the cache.
+		$this->assertEquals( get_option( 'option1' ), wp_cache_get( 'option1', 'options' ) );
+		$this->assertEquals( get_option( 'option2' ), wp_cache_get( 'option2', 'options' ) );
+
+		// Call the get_options function to retrieve the options.
+		$options = get_options( array( 'option1', 'option2' ) );
+
+		// Check that the retrieved options are correct.
+		$this->assertEquals( get_option( 'option1' ), $options['option1'] );
+		$this->assertEquals( get_option( 'option2' ), $options['option2'] );
+	}
 }
