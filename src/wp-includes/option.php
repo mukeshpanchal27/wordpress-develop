@@ -325,14 +325,6 @@ function prime_options_by_group( $option_group ) {
  * @return array|false An array of key-value pairs for the requested options, or false if empty array.
  */
 function get_options( $options ) {
-	if ( is_scalar( $options ) ) {
-		$option = trim( $option );
-	}
-
-	if ( empty( $options ) ) {
-		return false;
-	}
-
 	prime_options( $options );
 
 	$result = array();
