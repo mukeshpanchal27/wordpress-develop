@@ -339,10 +339,9 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			$this->assertFalse( wp_cache_get( $option, 'options' ), "$option was not deleted from the cache." );
 		}
 
-		
 		// Call the prime_options function to prime the options.
 		prime_options( $options_to_prime );
-		
+
 		// Store the initial database query count.
 		$initial_query_count = get_num_queries();
 
@@ -354,12 +353,12 @@ class Tests_Option_Option extends WP_UnitTestCase {
 				"$option was not primed."
 			);
 		}
-		
+
 		// Ensure no additional database queries were made.
 		$this->assertSame(
 			$initial_query_count,
 			get_num_queries(),
-			"Additional database queries were made."
+			'Additional database queries were made.'
 		);
 	}
 
@@ -387,7 +386,7 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			'option2',
 			'option3',
 		);
-	
+
 		/*
 		 * Set values for the options,
 		 * clear the cache for the options,
@@ -403,11 +402,11 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		prime_options_by_group( 'group1' );
 
 		// Check that options are now in the cache.
-		$this->assertSame( get_option( 'option1' ), wp_cache_get( 'option1', 'options' ), "option1 was not primed." );
-		$this->assertSame( get_option( 'option2' ), wp_cache_get( 'option2', 'options' ), "option2 was not primed." );
+		$this->assertSame( get_option( 'option1' ), wp_cache_get( 'option1', 'options' ), 'option1 was not primed.' );
+		$this->assertSame( get_option( 'option2' ), wp_cache_get( 'option2', 'options' ), 'option2 was not primed.' );
 
 		// Make sure option3 is still not in cache.
-		$this->assertFalse( wp_cache_get( 'option3', 'options' ), "option3 was not deleted from the cache." );
+		$this->assertFalse( wp_cache_get( 'option3', 'options' ), 'option3 was not deleted from the cache.' );
 	}
 
 	/**
