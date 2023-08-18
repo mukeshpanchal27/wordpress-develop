@@ -292,11 +292,17 @@ function prime_options( $options ) {
 		)
 	);
 
-	$options_not_found = $options_to_prime;
+	$options_found = array();
 	foreach ( $results as $result ) {
-		wp_cache_set( $result->option_name, maybe_unserialize( $result->option_value ), 'options' );
-		unset( $options_not_found[ array_search( $result->option_name, $options_not_found, true ) ] );
+		$options_found[ $result->option_name ] =  maybe_unserialize( $result->option_value );
 	}
+	wp_cache_set_multiple( $options_found, 'options' );
+
+	// If all options were found, no need to update `notoptions` cache.
+	if ( count( $options_found ) === count( $options_to_prime ) ) {
+		return;
+	}
+	$options_not_found = array_diff( $options_to_prime, array_keys( $options_found ) );
 
 	$notoptions = wp_cache_get( 'notoptions', 'options' );
 
