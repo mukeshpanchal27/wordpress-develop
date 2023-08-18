@@ -93,7 +93,7 @@ class Tests_Option_PrimeOptions extends WP_UnitTestCase {
 		// Check that options are present in the notoptions cache.
 		$new_notoptions = wp_cache_get( 'notoptions', 'options' );
 		$this->assertIsArray( $new_notoptions, 'The notoptions cache should be an array.' );
-		foreach( $options_to_prime as $option ) {
+		foreach ( $options_to_prime as $option ) {
 			$this->assertArrayHasKey( $option, $new_notoptions, "$option was not added to the notoptions cache." );
 		}
 	}
