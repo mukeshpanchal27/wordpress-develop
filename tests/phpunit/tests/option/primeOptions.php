@@ -94,4 +94,17 @@ class Tests_Option_PrimeOptions extends WP_UnitTestCase {
 			$this->assertTrue( isset( $new_notoptions[ $option ] ), "$option was not added to the notoptions cache." );
 		}
 	}
+
+	/**
+	 * Tests prime_options() with an empty input array.
+	 */
+	function test_prime_options_with_empty_array() {
+		$alloptions = wp_load_alloptions();
+		$notoptions = wp_cache_get( 'notoptions', 'options' );
+
+		prime_options( array() );
+
+		$this->assertSame( $alloptions, wp_cache_get( 'alloptions', 'options' ), 'The alloptions cache was modified.' );
+		$this->assertSame( $notoptions, wp_cache_get( 'notoptions', 'options' ), 'The notoptions cache was modified.' );
+	}
 }
