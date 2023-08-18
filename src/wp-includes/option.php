@@ -294,7 +294,7 @@ function prime_options( $options ) {
 
 	$options_found = array();
 	foreach ( $results as $result ) {
-		$options_found[ $result->option_name ] =  maybe_unserialize( $result->option_value );
+		$options_found[ $result->option_name ] = maybe_unserialize( $result->option_value );
 	}
 	wp_cache_set_multiple( $options_found, 'options' );
 
