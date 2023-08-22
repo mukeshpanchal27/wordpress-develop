@@ -7,7 +7,7 @@ Welcome to the WordPress development repository! Please check out the [contribut
 
 ## Getting Started
 
-### Using GitHub Codespaces
+### Using GitHub Codespaces:
 
 To get started, create a codespace for this repository by clicking this 👇 
 
