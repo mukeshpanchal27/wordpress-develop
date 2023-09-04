@@ -2152,8 +2152,6 @@ function update_network_option( $network_id, $option, $value ) {
 		'new' => $value,
 	);
 
-	print_r( $values );
-
 	foreach ( $values as $_key => &$_value ) {
 		// Special handling for false-ish values.
 		if ( false === $_value ) {
