@@ -798,7 +798,7 @@ function update_option( $option, $value, $autoload = null ) {
 	 * If the new and old values are the same, no need to update.
 	 * Scalar values in the cache will always be strings, so we must compare string values.
 	 */
- 	$values = array(
+	$values = array(
 		'old' => $old_value,
 		'new' => $value,
 	);
