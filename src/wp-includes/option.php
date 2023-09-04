@@ -802,7 +802,7 @@ function update_option( $option, $value, $autoload = null ) {
 		'old' => $old_value,
 		'new' => $value,
 	);
-
+print_r( $values );
 	foreach ( $values as $_key => &$_value ) {
 		// Special handling for false-ish values.
 		if ( false === $_value ) {
