@@ -795,9 +795,9 @@ function update_option( $option, $value, $autoload = null ) {
 	}
 
 	/*
- 	 * If the new and old values are the same, no need to update.
- 	 * Scalar values in the cache will always be strings, so we must compare string values.
- 	 */
+	 * If the new and old values are the same, no need to update.
+	 * Scalar values in the cache will always be strings, so we must compare string values.
+	 */
  	$values = array(
 		'old' => $old_value,
 		'new' => $value,
@@ -808,11 +808,11 @@ function update_option( $option, $value, $autoload = null ) {
 		if ( false === $_value ) {
 			$_value = '0';
 
-		// Empty strings in the database should be seen as equivalent to false-ish cache values.
+			// Empty strings in the database should be seen as equivalent to false-ish cache values.
 		} elseif ( 'old' === $_key && '' === $_value ) {
 			$_value = '0';
 
-		// Cast scalars to a string so type discrepancies don't result in cache misses.
+			// Cast scalars to a string so type discrepancies don't result in cache misses.
 		} elseif ( is_scalar( $_value ) ) {
 			$_value = (string) $_value;
 		}
