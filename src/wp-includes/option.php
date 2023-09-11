@@ -796,11 +796,13 @@ function update_option( $option, $value, $autoload = null ) {
 		if ( false === $_value ) {
 			$_value = '0';
 
-			// Empty strings in the database should be seen as equivalent to false-ish cache values.
+		// phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect	
+		// Empty strings in the database should be seen as equivalent to false-ish cache values.
 		} elseif ( 'old' === $_key && '' === $_value ) {
 			$_value = '0';
 
-			// Cast scalars to a string so type discrepancies don't result in cache misses.
+		// phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect
+		// Cast scalars to a string so type discrepancies don't result in cache misses.
 		} elseif ( is_scalar( $_value ) ) {
 			$_value = (string) $_value;
 		}
