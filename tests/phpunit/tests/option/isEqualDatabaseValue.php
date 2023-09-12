@@ -61,7 +61,7 @@ class Tests_Is_Equal_Database_Value extends WP_UnitTestCase {
 
 			// Serialized values.
 			array( array( 'foo' => 'bar' ), serialize( array( 'foo' => 'bar' ) ), false ),
-			array( array( 'foo' => 'bar' ), serialize( array( 'foo' => 'baz') ), false ),
+			array( array( 'foo' => 'bar' ), serialize( array( 'foo' => 'baz' ) ), false ),
 			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'bar') ), true ),
 			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'baz') ), false ),
 		);
