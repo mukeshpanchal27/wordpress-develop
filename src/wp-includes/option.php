@@ -2922,5 +2922,5 @@ function is_equal_database_value( $old_value, $new_value ) {
 	 *
 	 * See https://core.trac.wordpress.org/ticket/38903
 	 */
-	return maybe_serialize( $a ) === maybe_serialize( $b );
+	return maybe_serialize( $old_value ) === maybe_serialize( $new_value );
 }
