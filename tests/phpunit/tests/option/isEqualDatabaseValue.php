@@ -56,14 +56,14 @@ class Tests_Is_Equal_Database_Value extends WP_UnitTestCase {
 			array( (object) array( 'foo' => 'bar' ), (object) array( 'foo' => 'bar' ), true ),
 			array( (object) array( 'foo' => 'bar' ), (object) array( 'foo' => 'baz' ), false ),
 			array( (object) array( 'foo' => 'bar' ), serialize( (object) array( 'foo' => 'bar' ) ), false ),
-			array( serialize( (object) array( 'foo' => 'bar' ) ), (object) array( 'foo' => 'bar'), false ),
+			array( serialize( (object) array( 'foo' => 'bar' ) ), (object) array( 'foo' => 'bar' ), false ),
 			array( serialize( (object) array( 'foo' => 'bar' ) ), (object) array( 'foo' => 'baz' ), false ),
 
 			// Serialized values.
 			array( array( 'foo' => 'bar' ), serialize( array( 'foo' => 'bar' ) ), false ),
 			array( array( 'foo' => 'bar' ), serialize( array( 'foo' => 'baz' ) ), false ),
-			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'bar') ), true ),
-			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'baz') ), false ),
+			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'bar' ) ), true ),
+			array( serialize( (object) array( 'foo' => 'bar' ) ), serialize( (object) array( 'foo' => 'baz' ) ), false ),
 		);
 	}
 }

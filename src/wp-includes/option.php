@@ -784,7 +784,7 @@ function update_option( $option, $value, $autoload = null ) {
 	$value = apply_filters( 'pre_update_option', $value, $option, $old_value );
 
 	// If the new and old values are the same, no need to update.
-	if ( $option_exists && is_equal_database_value( $old_value, $value ) ) {
+	if ( $option_exists || is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
@@ -2100,7 +2100,7 @@ function update_network_option( $network_id, $option, $value ) {
 	$value = apply_filters( "pre_update_site_option_{$option}", $value, $old_value, $option, $network_id );
 
 	// If the new and old values are the same, no need to update.
-	if ( $option_exists && is_equal_database_value( $old_value, $value ) ) {
+	if ( $option_exists || is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
