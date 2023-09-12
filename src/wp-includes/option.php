@@ -754,8 +754,9 @@ function update_option( $option, $value, $autoload = null ) {
 		$value = clone $value;
 	}
 
-	$value     = sanitize_option( $option, $value );
-	$old_value = get_option( $option );
+	$value         = sanitize_option( $option, $value );
+	$old_value     = get_option( $option );
+	$option_exists = false !== $old_value;
 
 	/**
 	 * Filters a specific option before its value is (maybe) serialized and updated.
@@ -783,7 +784,7 @@ function update_option( $option, $value, $autoload = null ) {
 	$value = apply_filters( 'pre_update_option', $value, $option, $old_value );
 
 	// If the new and old values are the same, no need to update.
-	if ( is_equal_database_value( $old_value, $value ) ) {
+	if ( $option_exists && is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
@@ -2078,7 +2079,8 @@ function update_network_option( $network_id, $option, $value ) {
 
 	wp_protect_special_option( $option );
 
-	$old_value = get_network_option( $network_id, $option, false );
+	$old_value     = get_network_option( $network_id, $option, false );
+	$option_exists = false !== $old_value;
 
 	/**
 	 * Filters a specific network option before its value is updated.
@@ -2098,7 +2100,7 @@ function update_network_option( $network_id, $option, $value ) {
 	$value = apply_filters( "pre_update_site_option_{$option}", $value, $old_value, $option, $network_id );
 
 	// If the new and old values are the same, no need to update.
-	if ( is_equal_database_value( $old_value, $value ) ) {
+	if ( $option_exists && is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
