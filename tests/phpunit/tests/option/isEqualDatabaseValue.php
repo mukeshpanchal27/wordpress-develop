@@ -2,6 +2,8 @@
 /**
  * Test is_equal_database_value().
  *
+ * @group option
+ *
  * @covers ::is_equal_database_value
  */
 class Tests_Is_Equal_Database_Value extends WP_UnitTestCase {
