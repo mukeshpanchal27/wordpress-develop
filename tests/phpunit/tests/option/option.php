@@ -453,8 +453,8 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			array( false, '0', true ),
 			array( false, 0, true ),
 			array( false, 0.0, true ),
-			array( false, '', true ),
-			array( false, null, true ),
+			array( false, '', false ),
+			array( false, null, false ),
 			array( false, array(), true ),
 			array( false, false, false ),
 		);
