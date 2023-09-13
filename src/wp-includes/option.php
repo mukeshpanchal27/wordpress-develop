@@ -783,7 +783,7 @@ function update_option( $option, $value, $autoload = null ) {
 	$value = apply_filters( 'pre_update_option', $value, $option, $old_value );
 
 	// If the new and old values are the same, no need to update.
-	if ( false !== $old_value && is_equal_database_value( $old_value, $value ) ) {
+	if ( false !== $old_value && _is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
@@ -2098,7 +2098,7 @@ function update_network_option( $network_id, $option, $value ) {
 	$value = apply_filters( "pre_update_site_option_{$option}", $value, $old_value, $option, $network_id );
 
 	// If the new and old values are the same, no need to update.
-	if ( false !== $old_value && is_equal_database_value( $old_value, $value ) ) {
+	if ( false !== $old_value && _is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	}
 
@@ -2888,7 +2888,7 @@ function filter_default_option( $default_value, $option, $passed_default ) {
  * @param mixed $new_value The new value to compare.
  * @return bool True if the values are equal, false otherwise.
  */
-function is_equal_database_value( $old_value, $new_value ) {
+function _is_equal_database_value( $old_value, $new_value ) {
 	$values = array(
 		'old' => $old_value,
 		'new' => $new_value,
