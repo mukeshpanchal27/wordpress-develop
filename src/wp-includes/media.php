@@ -5709,7 +5709,6 @@ function wp_get_loading_optimization_attributes( $tag_name, $attr, $context ) {
 			'template_part_' . WP_TEMPLATE_PART_AREA_HEADER => true,
 			'get_header_image_tag'                          => true,
 		);
-	
 		/**
 		 * Filters the header-specific contexts.
 		 *
