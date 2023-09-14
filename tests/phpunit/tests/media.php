@@ -4499,7 +4499,7 @@ EOF;
 
 		$this->assertSame(
 			array( 'fetchpriority' => 'high' ),
-			wp_get_loading_optimization_attributes( 'img', $attr, 'something_completely_arbitrary' ),
+			wp_get_loading_optimization_attributes( 'img', $attr, 'something_completely_arbitrary' )
 		);
 	}
 
