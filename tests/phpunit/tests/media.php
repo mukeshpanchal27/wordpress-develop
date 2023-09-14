@@ -4454,7 +4454,7 @@ EOF;
 		$attr = $this->get_width_height_for_high_priority();
 
 		$this->assertArrayNotHasKey(
-			array( 'loading' => 'lazy' ),
+			'loading',
 			wp_get_loading_optimization_attributes( 'img', $attr, $context ),
 			'Images in the header context should not be lazy-loaded.'
 		);
