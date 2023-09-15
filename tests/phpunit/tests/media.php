@@ -4383,11 +4383,6 @@ EOF;
 	public function test_wp_get_loading_optimization_attributes_with_arbitrary_contexts_before_main_query_loop( $context ) {
 		$attr = $this->get_width_height_for_high_priority();
 
-		$this->assertSame(
-			array( 'fetchpriority' => 'high' ),
-			wp_get_loading_optimization_attributes( 'img', $attr, $context ),
-			'The "fetchpriority" attribute should be "high" while in the loop and the main query.'
-		);
 		$query = $this->get_new_wp_query_for_published_post();
 
 		// Set as main query.
@@ -4395,6 +4390,12 @@ EOF;
 
 		while ( have_posts() ) {
 			the_post();
+
+			$this->assertSame(
+				array( 'fetchpriority' => 'high' ),
+				wp_get_loading_optimization_attributes( 'img', $attr, $context ),
+				'The "fetchpriority" attribute should be "high" while in the loop and the main query.'
+			);
 
 			$this->assertSame(
 				array( 'loading' => 'lazy' ),
