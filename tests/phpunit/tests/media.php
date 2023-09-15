@@ -4388,14 +4388,14 @@ EOF;
 		// Set as main query.
 		$this->set_main_query( $query );
 
+		$this->assertSame(
+			array( 'fetchpriority' => 'high' ),
+			wp_get_loading_optimization_attributes( 'img', $attr, $context ),
+			'The "fetchpriority" attribute should be "high" while in the loop and the main query.'
+		);
+
 		while ( have_posts() ) {
 			the_post();
-
-			$this->assertSame(
-				array( 'fetchpriority' => 'high' ),
-				wp_get_loading_optimization_attributes( 'img', $attr, $context ),
-				'The "fetchpriority" attribute should be "high" while in the loop and the main query.'
-			);
 
 			$this->assertSame(
 				array( 'loading' => 'lazy' ),
