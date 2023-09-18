@@ -792,11 +792,12 @@ function update_option( $option, $value, $autoload = null ) {
 		if ( $value === $default_value ) {
 			return false;
 		}
-		
+
 		// Default setting for new options is 'yes'.
 		if ( null === $autoload ) {
 			$autoload = 'yes';
 		}
+
 		return add_option( $option, $value, '', $autoload );
 	}
 
