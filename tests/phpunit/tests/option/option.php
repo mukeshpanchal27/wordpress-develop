@@ -464,26 +464,6 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	 * @ticket 22192
 	 *
 	 * @covers ::update_option
-	 * @group mukeshtest
-	 */
-	public function test_update_option_should_not_store_option_with_default_value_false___() {
-		global $wpdb;
-
-		$option = 'update_option_default_false';
-		update_option_old( $option, false );
-
-		$actual = $wpdb->query(
-			$wpdb->prepare(
-				"SELECT option_name FROM $wpdb->options WHERE option_name = %s LIMIT 1",
-				$option
-			)
-		);
-
-		$this->assertSame( 0, $actual );
-	}
-
-	/**
-	 * @group mukeshtest
 	 */
 	public function test_update_option_should_not_store_option_with_default_value_false() {
 		global $wpdb;
@@ -508,35 +488,6 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	 * @ticket 22192
 	 *
 	 * @covers ::update_option
-	 * @group mukeshtest
-	 */
-	public function test_update_option_should_not_store_option_with_filtered_default_value_besdasd() {
-		global $wpdb;
-
-		$option        = 'update_option_custom_default';
-		$default_value = 'default-value';
-
-		add_filter(
-			"default_option_{$option}",
-			static function () use ( $default_value ) {
-				return $default_value;
-			}
-		);
-
-		update_option_old( $option, $default_value );
-
-		$actual = $wpdb->query(
-			$wpdb->prepare(
-				"SELECT option_name FROM $wpdb->options WHERE option_name = %s LIMIT 1",
-				$option
-			)
-		);
-
-		$this->assertSame( 0, $actual );
-	}
-
-	/**
-	 * @group mukeshtest
 	 */
 	public function test_update_option_should_not_store_option_with_filtered_default_value() {
 		global $wpdb;
