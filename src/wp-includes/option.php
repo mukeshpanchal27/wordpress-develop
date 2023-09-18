@@ -785,14 +785,14 @@ function update_option( $option, $value, $autoload = null ) {
 	/** This filter is documented in wp-includes/option.php */
 	$default_value = apply_filters( "default_option_{$option}", false, $option, false );
 
-	if ( $old_value === $default_value ) {
+	if ( _is_equal_database_value( $old_value, $value ) ) {
+		return false;
+	} elseif ( $old_value === $default_value ) {
 		// Default setting for new options is 'yes'.
 		if ( null === $autoload ) {
 			$autoload = 'yes';
 		}
 		return add_option( $option, $value, '', $autoload );
-	} elseif ( _is_equal_database_value( $old_value, $value ) ) {
-		return false;
 	}
 
 	$serialized_value = maybe_serialize( $value );
