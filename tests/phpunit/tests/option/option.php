@@ -373,10 +373,12 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		wp_cache_delete( 'alloptions', 'options' );
 		wp_load_alloptions();
 
+		$num_queries = get_num_queries();
+
 		$updated = update_option( 'foo', $new_value );
 
 		$this->assertFalse( $updated, 'update_option should not return true when values are loosely equal.' );
-		$this->assertSame( 0, get_num_queries(), 'The number of database queries should not change.' );
+		$this->assertSame( $num_queries, get_num_queries(), 'The number of database queries should not change.' );
 	}
 
 	/**
