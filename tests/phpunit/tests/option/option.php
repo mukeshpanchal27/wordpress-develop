@@ -373,12 +373,10 @@ class Tests_Option_Option extends WP_UnitTestCase {
 		wp_cache_delete( 'alloptions', 'options' );
 		wp_load_alloptions();
 
-		$num_queries = get_num_queries();
-
 		$updated = update_option( 'foo', $new_value );
 
 		$this->assertFalse( $updated, 'update_option should not return true when values are loosely equal.' );
-		$this->assertSame( $num_queries, get_num_queries(), 'The number of database queries should not change.' );
+		$this->assertSame( 0, get_num_queries(), 'The number of database queries should not change.' );
 	}
 
 	/**
@@ -419,6 +417,9 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			array( 0.0, 0 ),
 			array( 0.0, 0.0 ),
 			array( 0.0, false ),
+			array( false, '0', false ),
+			array( false, 0, false ),
+			array( false, 0.0, false ),
 		);
 	}
 
@@ -450,13 +451,9 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	 */
 	public function data_update_option_type_falsey_values() {
 		return array(
-			array( false, '0', true ),
-			array( false, 0, true ),
-			array( false, 0.0, true ),
 			array( false, '', false ),
 			array( false, null, false ),
 			array( false, array(), true ),
-			array( false, false, false ),
 		);
 	}
 
@@ -467,6 +464,26 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	 * @ticket 22192
 	 *
 	 * @covers ::update_option
+	 * @group mukeshtest
+	 */
+	public function test_update_option_should_not_store_option_with_default_value_false___() {
+		global $wpdb;
+
+		$option = 'update_option_default_false';
+		update_option_old( $option, false );
+
+		$actual = $wpdb->query(
+			$wpdb->prepare(
+				"SELECT option_name FROM $wpdb->options WHERE option_name = %s LIMIT 1",
+				$option
+			)
+		);
+
+		$this->assertSame( 0, $actual );
+	}
+
+	/**
+	 * @group mukeshtest
 	 */
 	public function test_update_option_should_not_store_option_with_default_value_false() {
 		global $wpdb;
@@ -491,6 +508,35 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	 * @ticket 22192
 	 *
 	 * @covers ::update_option
+	 * @group mukeshtest
+	 */
+	public function test_update_option_should_not_store_option_with_filtered_default_value_besdasd() {
+		global $wpdb;
+
+		$option        = 'update_option_custom_default';
+		$default_value = 'default-value';
+
+		add_filter(
+			"default_option_{$option}",
+			static function () use ( $default_value ) {
+				return $default_value;
+			}
+		);
+
+		update_option_old( $option, $default_value );
+
+		$actual = $wpdb->query(
+			$wpdb->prepare(
+				"SELECT option_name FROM $wpdb->options WHERE option_name = %s LIMIT 1",
+				$option
+			)
+		);
+
+		$this->assertSame( 0, $actual );
+	}
+
+	/**
+	 * @group mukeshtest
 	 */
 	public function test_update_option_should_not_store_option_with_filtered_default_value() {
 		global $wpdb;
