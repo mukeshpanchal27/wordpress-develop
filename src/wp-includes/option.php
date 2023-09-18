@@ -790,7 +790,6 @@ function update_option( $option, $value, $autoload = null ) {
 		if ( null === $autoload ) {
 			$autoload = 'yes';
 		}
-	
 		return add_option( $option, $value, '', $autoload );
 	} elseif ( _is_equal_database_value( $old_value, $value ) ) {
 		return false;
