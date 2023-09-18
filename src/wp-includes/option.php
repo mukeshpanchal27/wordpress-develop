@@ -782,19 +782,18 @@ function update_option( $option, $value, $autoload = null ) {
 	 */
 	$value = apply_filters( 'pre_update_option', $value, $option, $old_value );
 
-	// If the new and old values are the same, no need to update.
-	if ( false !== $old_value && _is_equal_database_value( $old_value, $value ) ) {
-		return false;
-	}
-
 	/** This filter is documented in wp-includes/option.php */
-	if ( apply_filters( "default_option_{$option}", false, $option, false ) === $old_value ) {
+	$default_value = apply_filters( "default_option_{$option}", false, $option, false );
+
+	if ( $old_value === $default_value ) {
 		// Default setting for new options is 'yes'.
 		if ( null === $autoload ) {
 			$autoload = 'yes';
 		}
-
+	
 		return add_option( $option, $value, '', $autoload );
+	} elseif ( _is_equal_database_value( $old_value, $value ) ) {
+		return false;
 	}
 
 	$serialized_value = maybe_serialize( $value );
@@ -2097,8 +2096,16 @@ function update_network_option( $network_id, $option, $value ) {
 	 */
 	$value = apply_filters( "pre_update_site_option_{$option}", $value, $old_value, $option, $network_id );
 
-	// If the new and old values are the same, no need to update.
-	if ( false !== $old_value && _is_equal_database_value( $old_value, $value ) ) {
+	/*
+	 * If the new and old values are the same, no need to update.
+	 *
+	 * Unserialized values will be adequate in most cases. If the unserialized
+	 * data differs, the (maybe) serialized data is checked to avoid
+	 * unnecessary database calls for otherwise identical object instances.
+	 *
+	 * See https://core.trac.wordpress.org/ticket/44956
+	 */
+	if ( $value === $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) {
 		return false;
 	}
 
