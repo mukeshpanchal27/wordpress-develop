@@ -785,13 +785,9 @@ function update_option( $option, $value, $autoload = null ) {
 	/** This filter is documented in wp-includes/option.php */
 	$default_value = apply_filters( "default_option_{$option}", false, $option, false );
 
-	if ( _is_equal_database_value( $old_value, $value ) ) {
+	if ( $old_value !== $default_value && _is_equal_database_value( $old_value, $value ) ) {
 		return false;
 	} elseif ( $old_value === $default_value ) {
-		// No need to add the option if the new value is the default.
-		if ( $value === $default_value ) {
-			return false;
-		}
 
 		// Default setting for new options is 'yes'.
 		if ( null === $autoload ) {
