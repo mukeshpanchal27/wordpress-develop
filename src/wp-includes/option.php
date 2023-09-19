@@ -787,7 +787,7 @@ function update_option( $option, $value, $autoload = null ) {
 
 	if ( $old_value !== $default_value && _is_equal_database_value( $old_value, $value ) ) {
 		return false;
-	} elseif ( $old_value === $default_value ) {
+	} else {
 
 		// Default setting for new options is 'yes'.
 		if ( null === $autoload ) {
