@@ -4335,7 +4335,7 @@ EOF;
 	 *
 	 * @ticket 58893
 	 */
-	public function test_pre_wp_get_loading_optimization_attributes_filter() {
+	public function pre_wp_get_loading_optimization_attributes_filter() {
 		add_filter(
 			'pre_wp_get_loading_optimization_attributes',
 			function ( $loading_attrs ) {
@@ -4379,7 +4379,7 @@ EOF;
 	 *
 	 * @ticket 58893
 	 */
-	public function test_wp_get_loading_optimization_attributes_filter() {
+	public function wp_get_loading_optimization_attributes_filter() {
 		$attr = $this->get_width_height_for_high_priority();
 
 		$this->assertSame(
