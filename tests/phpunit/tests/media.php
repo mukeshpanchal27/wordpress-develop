@@ -4345,7 +4345,6 @@ EOF;
 			10,
 			1
 		);
-		
 		$attr = $this->get_width_height_for_high_priority();
 
 		$this->assertSame(
@@ -4390,7 +4389,7 @@ EOF;
 		);
 
 		add_filter(
-			'wp_get_loading_optimization_attributes', 
+			'wp_get_loading_optimization_attributes',
 			function ( $loading_attrs ) {
 				unset( $loading_attrs['loading'] );
 				$loading_attrs['fetchpriority'] = 'high';
