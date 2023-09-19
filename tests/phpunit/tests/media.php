@@ -4336,30 +4336,42 @@ EOF;
 	 * @ticket 58893
 	 */
 	public function test_pre_wp_get_loading_optimization_attributes_filter() {
-		add_filter( 'pre_wp_get_loading_optimization_attributes', function ( $loading_attrs ) {
-			$loading_attrs['fetchpriority'] = 'high';
-			return $loading_attrs;
-		}, 10, 1 );
+		add_filter(
+			'pre_wp_get_loading_optimization_attributes',
+			function ( $loading_attrs ) {
+				$loading_attrs['fetchpriority'] = 'high';
+				return $loading_attrs;
+			},
+			10,
+			1
+		);
 		
 		$attr = $this->get_width_height_for_high_priority();
 
 		$this->assertSame(
 			array( 'fetchpriority' => 'high' ),
 			wp_get_loading_optimization_attributes( 'img', $attr, 'the_content' ),
+			'The filter did not return early fetchpriority attribute'
 		);
 
 		// Clean up the filter.
 		add_filter( 'pre_wp_get_loading_optimization_attributes', '__return_empty_array' );
 
 		// Modify the loading attributes with any custom attributes.
-		add_filter( 'pre_wp_get_loading_optimization_attributes', function ( $loading_attrs ) {
-			$loading_attrs['custom_attr'] = 'custom_value';
-			return $loading_attrs;
-		}, 10, 1 );
+		add_filter(
+			'pre_wp_get_loading_optimization_attributes',
+			function ( $loading_attrs ) {
+				$loading_attrs['custom_attr'] = 'custom_value';
+				return $loading_attrs;
+			},
+			10,
+			1
+		);
 
 		$this->assertSame(
 			array( 'custom_attr' => 'custom_value' ),
 			wp_get_loading_optimization_attributes( 'img', $attr, 'the_content' ),
+			'The filter did not return custom attributes'
 		);
 	}
 
@@ -4374,17 +4386,24 @@ EOF;
 		$this->assertSame(
 			array( 'loading' => 'lazy' ),
 			wp_get_loading_optimization_attributes( 'img', $attr, 'the_content' ),
+			'Before the filter it will return the loading attribute'
 		);
 
-		add_filter( 'wp_get_loading_optimization_attributes', function ( $loading_attrs ) {
-			unset( $loading_attrs['loading'] );
-			$loading_attrs['fetchpriority'] = 'high';
-			return $loading_attrs;
-		}, 10, 4 );
+		add_filter(
+			'wp_get_loading_optimization_attributes', 
+			function ( $loading_attrs ) {
+				unset( $loading_attrs['loading'] );
+				$loading_attrs['fetchpriority'] = 'high';
+				return $loading_attrs;
+			},
+			10,
+			1
+		);
 
 		$this->assertSame(
 			array( 'fetchpriority' => 'high' ),
 			wp_get_loading_optimization_attributes( 'img', $attr, 'the_content' ),
+			'After the filter it will return the fetchpriority attribute'
 		);
 	}
 
