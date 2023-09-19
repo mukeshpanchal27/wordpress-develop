@@ -4335,10 +4335,10 @@ EOF;
 	 *
 	 * @ticket 58893
 	 */
-	public function pre_wp_get_loading_optimization_attributes_filter() {
+	public function test_pre_wp_get_loading_optimization_attributes_filter() {
 		add_filter(
 			'pre_wp_get_loading_optimization_attributes',
-			function ( $loading_attrs ) {
+			static function ( $loading_attrs ) {
 				$loading_attrs['fetchpriority'] = 'high';
 				return $loading_attrs;
 			},
@@ -4359,7 +4359,7 @@ EOF;
 		// Modify the loading attributes with any custom attributes.
 		add_filter(
 			'pre_wp_get_loading_optimization_attributes',
-			function ( $loading_attrs ) {
+			static function ( $loading_attrs ) {
 				$loading_attrs['custom_attr'] = 'custom_value';
 				return $loading_attrs;
 			},
@@ -4379,7 +4379,7 @@ EOF;
 	 *
 	 * @ticket 58893
 	 */
-	public function wp_get_loading_optimization_attributes_filter() {
+	public function test_wp_get_loading_optimization_attributes_filter() {
 		$attr = $this->get_width_height_for_high_priority();
 
 		$this->assertSame(
@@ -4390,7 +4390,7 @@ EOF;
 
 		add_filter(
 			'wp_get_loading_optimization_attributes',
-			function ( $loading_attrs ) {
+			static function ( $loading_attrs ) {
 				unset( $loading_attrs['loading'] );
 				$loading_attrs['fetchpriority'] = 'high';
 				return $loading_attrs;
