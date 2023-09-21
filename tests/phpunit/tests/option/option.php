@@ -368,4 +368,125 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			array( 'autoload_false', false, 'no' ),
 		);
 	}
+
+	/**
+	 * @ticket 22192
+	 *
+	 * @covers ::update_option
+	 *
+	 * @dataProvider data_update_option_type_juggling
+	 *
+	 * @param mixed $old_value One of the values to compare.
+	 * @param mixed $new_value The other value to compare.
+	 */
+	public function test_update_option_should_hit_cache_when_loosely_equal_to_existing_value_and_cached_values_are_faithful_to_original_type( $old_value, $new_value ) {
+		add_option( 'foo', $old_value );
+		$num_queries = get_num_queries();
+
+		$updated = update_option( 'foo', $new_value );
+
+		$this->assertFalse( $updated, 'update_option should not return true when values are loosely equal.' );
+		$this->assertSame( $num_queries, get_num_queries(), 'The number of database queries should not change.' );
+	}
+
+	/**
+	 * @ticket 22192
+	 *
+	 * @covers ::update_option
+	 *
+	 * @dataProvider data_update_option_type_juggling
+	 *
+	 * @param mixed $old_value One of the values to compare.
+	 * @param mixed $new_value The other value to compare.
+	 */
+	public function test_update_option_should_hit_cache_when_loosely_equal_to_existing_value_and_cached_values_are_pulled_from_the_database( $old_value, $new_value ) {
+		add_option( 'foo', $old_value );
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_load_alloptions();
+
+		$num_queries = get_num_queries();
+
+		$updated = update_option( 'foo', $new_value );
+
+		$this->assertFalse( $updated, 'update_option should not return true when values are loosely equal.' );
+		$this->assertSame( $num_queries, get_num_queries(), 'The number of database queries should not change.' );
+	}
+
+	/**
+	 * Data provider.
+	 *
+	 * @return array
+	 */
+	public function data_update_option_type_juggling() {
+		return array(
+			// Truthy.
+			array( '1', '1' ),
+			array( '1', 1 ),
+			array( '1', 1.0 ),
+			array( '1', true ),
+			array( 1, '1' ),
+			array( 1, 1 ),
+			array( 1, 1.0 ),
+			array( 1, true ),
+			array( 1.0, '1' ),
+			array( 1.0, 1 ),
+			array( 1.0, 1.0 ),
+			array( 1.0, true ),
+			array( true, '1' ),
+			array( true, 1 ),
+			array( true, 1 ),
+			array( true, true ),
+
+			// Falsey.
+			array( '0', '0' ),
+			array( '0', 0 ),
+			array( '0', 0.0 ),
+			array( '0', false ),
+			array( 0, '0' ),
+			array( 0, 0 ),
+			array( 0, 0.0 ),
+			array( 0, false ),
+			array( 0.0, '0' ),
+			array( 0.0, 0 ),
+			array( 0.0, 0.0 ),
+			array( 0.0, false ),
+		);
+	}
+
+	/**
+	 * @ticket 22192
+	 *
+	 * @covers ::update_option
+	 *
+	 * @dataProvider data_update_option_type_falsey_values
+	 *
+	 * @param mixed $old_value One of the values to compare.
+	 * @param mixed $new_value The other value to compare.
+	 * @param int   $expected  The expected result.
+	 */
+	public function test_update_option_with_falsey_values( $old_value, $new_value, $expected ) {
+		add_option( 'foo', $old_value );
+		$num_queries = get_num_queries();
+
+		$updated = update_option( 'foo', $new_value );
+
+		$this->assertSame( $expected, $updated, 'update_option should not match expeted value when values are loosely equal.' );
+		$this->assertSame( 1, get_num_queries() - $num_queries, 'The number of database queries should not change.' );
+	}
+
+	/**
+	 * Data provider.
+	 *
+	 * @return array
+	 */
+	public function data_update_option_type_falsey_values() {
+		return array(
+			array( false, '', false ),
+			array( false, null, false ),
+			array( false, array(), true ),
+			array( false, '0', true ),
+			array( false, 0, true ),
+			array( false, 0.0, true ),
+		);
+	}
 }
