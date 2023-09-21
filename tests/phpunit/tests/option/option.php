@@ -419,9 +419,9 @@ class Tests_Option_Option extends WP_UnitTestCase {
 			array( 0.0, 0 ),
 			array( 0.0, 0.0 ),
 			array( 0.0, false ),
-			array( false, '0', false ),
-			array( false, 0, false ),
-			array( false, 0.0, false ),
+			array( false, '0' ),
+			array( false, 0 ),
+			array( false, 0.0 ),
 		);
 	}
 
