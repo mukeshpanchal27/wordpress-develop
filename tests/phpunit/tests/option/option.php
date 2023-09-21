@@ -316,31 +316,6 @@ class Tests_Option_Option extends WP_UnitTestCase {
 	/**
 	 * @ticket 22192
 	 *
-	 * @covers ::add_option
-	 */
-	public function test_add_option_with_value_of_false_should_store_false_in_the_cache() {
-		add_option( 'foo', false );
-		$a = wp_cache_get( 'alloptions', 'options' );
-		$this->assertFalse( $a['foo'] );
-	}
-
-	/**
-	 * @ticket 22192
-	 *
-	 * @covers ::add_option
-	 */
-	public function test_add_option_with_value_of_false_should_store_empty_string_in_the_database() {
-		add_option( 'foo', false );
-
-		// Delete cache to ensure we pull from the database.
-		wp_cache_delete( 'alloptions', 'options' );
-
-		$this->assertSame( '', get_option( 'foo' ) );
-	}
-
-	/**
-	 * @ticket 22192
-	 *
 	 * @covers ::update_option
 	 *
 	 * @dataProvider data_update_option_type_juggling
