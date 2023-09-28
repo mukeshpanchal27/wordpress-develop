@@ -2944,3 +2944,165 @@ function _is_equal_database_value( $old_value, $new_value ) {
 	 */
 	return maybe_serialize( $old_value ) === maybe_serialize( $new_value );
 }
+
+function update_option_old( $option, $value, $autoload = null ) {
+	global $wpdb;
+
+	if ( is_scalar( $option ) ) {
+		$option = trim( $option );
+	}
+
+	if ( empty( $option ) ) {
+		return false;
+	}
+
+	/*
+	 * Until a proper _deprecated_option() function can be introduced,
+	 * redirect requests to deprecated keys to the new, correct ones.
+	 */
+	$deprecated_keys = array(
+		'blacklist_keys'    => 'disallowed_keys',
+		'comment_whitelist' => 'comment_previously_approved',
+	);
+
+	if ( isset( $deprecated_keys[ $option ] ) && ! wp_installing() ) {
+		_deprecated_argument(
+			__FUNCTION__,
+			'5.5.0',
+			sprintf(
+				/* translators: 1: Deprecated option key, 2: New option key. */
+				__( 'The "%1$s" option key has been renamed to "%2$s".' ),
+				$option,
+				$deprecated_keys[ $option ]
+			)
+		);
+		return update_option( $deprecated_keys[ $option ], $value, $autoload );
+	}
+
+	wp_protect_special_option( $option );
+
+	if ( is_object( $value ) ) {
+		$value = clone $value;
+	}
+
+	$value     = sanitize_option( $option, $value );
+	$old_value = get_option( $option );
+
+	/**
+	 * Filters a specific option before its value is (maybe) serialized and updated.
+	 *
+	 * The dynamic portion of the hook name, `$option`, refers to the option name.
+	 *
+	 * @since 2.6.0
+	 * @since 4.4.0 The `$option` parameter was added.
+	 *
+	 * @param mixed  $value     The new, unserialized option value.
+	 * @param mixed  $old_value The old option value.
+	 * @param string $option    Option name.
+	 */
+	$value = apply_filters( "pre_update_option_{$option}", $value, $old_value, $option );
+
+	/**
+	 * Filters an option before its value is (maybe) serialized and updated.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param mixed  $value     The new, unserialized option value.
+	 * @param string $option    Name of the option.
+	 * @param mixed  $old_value The old option value.
+	 */
+	$value = apply_filters( 'pre_update_option', $value, $option, $old_value );
+
+	/*
+	 * If the new and old values are the same, no need to update.
+	 *
+	 * Unserialized values will be adequate in most cases. If the unserialized
+	 * data differs, the (maybe) serialized data is checked to avoid
+	 * unnecessary database calls for otherwise identical object instances.
+	 *
+	 * See https://core.trac.wordpress.org/ticket/38903
+	 */
+	if ( $value === $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) {
+		return false;
+	}
+
+	/** This filter is documented in wp-includes/option.php */
+	if ( apply_filters( "default_option_{$option}", false, $option, false ) === $old_value ) {
+		// Default setting for new options is 'yes'.
+		if ( null === $autoload ) {
+			$autoload = 'yes';
+		}
+
+		return add_option( $option, $value, '', $autoload );
+	}
+
+	$serialized_value = maybe_serialize( $value );
+
+	/**
+	 * Fires immediately before an option value is updated.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @param string $option    Name of the option to update.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	do_action( 'update_option', $option, $old_value, $value );
+
+	$update_args = array(
+		'option_value' => $serialized_value,
+	);
+
+	if ( null !== $autoload ) {
+		$update_args['autoload'] = ( 'no' === $autoload || false === $autoload ) ? 'no' : 'yes';
+	}
+
+	$result = $wpdb->update( $wpdb->options, $update_args, array( 'option_name' => $option ) );
+	if ( ! $result ) {
+		return false;
+	}
+
+	$notoptions = wp_cache_get( 'notoptions', 'options' );
+
+	if ( is_array( $notoptions ) && isset( $notoptions[ $option ] ) ) {
+		unset( $notoptions[ $option ] );
+		wp_cache_set( 'notoptions', $notoptions, 'options' );
+	}
+
+	if ( ! wp_installing() ) {
+		$alloptions = wp_load_alloptions( true );
+		if ( isset( $alloptions[ $option ] ) ) {
+			$alloptions[ $option ] = $serialized_value;
+			wp_cache_set( 'alloptions', $alloptions, 'options' );
+		} else {
+			wp_cache_set( $option, $serialized_value, 'options' );
+		}
+	}
+
+	/**
+	 * Fires after the value of a specific option has been successfully updated.
+	 *
+	 * The dynamic portion of the hook name, `$option`, refers to the option name.
+	 *
+	 * @since 2.0.1
+	 * @since 4.4.0 The `$option` parameter was added.
+	 *
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 * @param string $option    Option name.
+	 */
+	do_action( "update_option_{$option}", $old_value, $value, $option );
+
+	/**
+	 * Fires after the value of an option has been successfully updated.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	do_action( 'updated_option', $option, $old_value, $value );
+
+	return true;
+}
