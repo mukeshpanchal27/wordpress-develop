@@ -365,7 +365,7 @@ class Tests_Option_NetworkOption extends WP_UnitTestCase {
 			array( '', array(), true ),
 			array( 0, array(), true ),
 			array( '0', array(), true ),
-			array( false, null, false ),
+			array( false, null, true ),
 			array( 'false', null, true ),
 			array( '', null, false ),
 			array( 0, null, true ),
@@ -378,7 +378,7 @@ class Tests_Option_NetworkOption extends WP_UnitTestCase {
 			array( array(), null, true ),
 			array( null, false ), // Does not update.
 			array( null, 'false' ), // Does not update.
-			array( null, '', false ),
+			array( null, '', true ),
 			array( null, 0, true ),
 			array( null, '0', true ),
 			array( null, array(), true ),
