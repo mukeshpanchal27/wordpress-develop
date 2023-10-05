@@ -240,9 +240,9 @@ class Tests_Option_NetworkOption extends WP_UnitTestCase {
 	public function test_update_network_option_should_store_option_with_default_value_false() {
 		global $wpdb;
 
-		$option = 'update_network_option_default_false';
+		$option     = 'update_network_option_default_false';
 		$network_id = get_current_network_id();
-		add_network_option( $network_id, $$option, false );
+		add_network_option( $network_id, $option, false );
 
 		$actual = $wpdb->query(
 			$wpdb->prepare(
