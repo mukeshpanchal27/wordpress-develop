@@ -251,6 +251,6 @@ class Tests_Option_NetworkOption extends WP_UnitTestCase {
 			)
 		);
 
-		$this->assertSame( 1, $actual );
+		$this->assertSame( 0, $actual );
 	}
 }
