@@ -248,7 +248,7 @@ function get_the_block_template_html() {
 	 * it has been injected by a plugin by hijacking the block template loader mechanism. In that case, entirely custom
 	 * logic may be applied which is unpredictable and therefore safer to omit this special handling on.
 	 */
-	if ( 
+	if (
 		$_wp_current_template_id
 		&& str_starts_with( $_wp_current_template_id, get_stylesheet() . '//' )
 		&& is_singular()
