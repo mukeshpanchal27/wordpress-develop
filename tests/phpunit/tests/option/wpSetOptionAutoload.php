@@ -111,4 +111,23 @@ class Tests_Option_WpSetOptionAutoload extends WP_UnitTestCase {
 		$this->assertTrue( wp_set_option_autoload( $option, false ), 'Function did not succeed' );
 		$this->assertSame( 'no', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", $option ) ), 'Option autoload value not updated in database' );
 	}
+
+	public function test_behaviour_of_wp_set_option_autoload() {
+		global $wpdb;
+
+		$option = 'test_option';
+		$value  = 'value';
+
+		for ($i=1; $i <= 5; $i++) { 
+			add_option( $option . '_' . $i, $value, '', 'yes' );
+		}
+
+		$this->assertTrue( wp_set_option_autoload( 'test_option_3', false ), 'Function did not succeed' );
+		$this->assertSame( 'no', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", 'test_option_3' ) ), 'Option autoload value not updated in database' );
+
+		$this->assertSame( 'yes', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", 'test_option_1' ) ), 'Option autoload value not updated in database' );
+		$this->assertSame( 'yes', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", 'test_option_2' ) ), 'Option autoload value not updated in database' );
+		$this->assertSame( 'yes', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", 'test_option_4' ) ), 'Option autoload value not updated in database' );
+		$this->assertSame( 'yes', $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", 'test_option_5' ) ), 'Option autoload value not updated in database' );
+	}
 }
