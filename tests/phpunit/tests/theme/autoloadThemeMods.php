@@ -12,11 +12,16 @@ require_once __DIR__ . '/base.php';
  */
 class Tests_Autoload_Theme_Mods extends WP_Theme_UnitTestCase {
 
-	function test_thst_on_switch_theme_previous_theme_mods_should_not_be_autoload() {
+	/**
+	 * Tests that theme mods should not autoloaded after switch_theme.
+	 *
+	 * @ticket 39537
+	 */
+	public function test_that_on_switch_theme_previous_theme_mods_should_not_be_autoload() {
 		global $wpdb;
 
 		$current_theme_stylesheet = get_stylesheet();
-		
+
 		// Set a theme mod for the current theme.
 		$new_theme_stylesheet = 'block-theme';
 		set_theme_mod( 'foo-bar-option', 'a-value' );
