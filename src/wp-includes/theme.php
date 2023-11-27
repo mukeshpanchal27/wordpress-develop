@@ -748,6 +748,7 @@ function locale_stylesheet() {
  * @global WP_Customize_Manager $wp_customize
  * @global array                $sidebars_widgets
  * @global array                $wp_registered_sidebars
+ * @global wpdb                 $wpdb                   WordPress database abstraction object.
  *
  * @param string $stylesheet Stylesheet name.
  */
