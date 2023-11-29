@@ -843,9 +843,9 @@ function upgrade_all() {
 		upgrade_640();
 	}
 
-	if ( $wp_current_db_version < 57200 ) {
+	/* if ( $wp_current_db_version < 57200 ) {
 		upgrade_650();
-	}
+	} */
 
 	maybe_disable_link_manager();
 
