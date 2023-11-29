@@ -2365,7 +2365,7 @@ function upgrade_640() {
 function upgrade_650() {
 	global $wp_current_db_version, $wpdb;
 
-	if ( $wp_current_db_version < 57200 ) {
+	/*if ( $wp_current_db_version < 57200 ) {
 		$stylesheet = get_stylesheet();
 
 		// Set autoload=no for all themes except the current one.
@@ -2381,7 +2381,7 @@ function upgrade_650() {
 		wp_set_option_autoload_values( $autoload );
 
 		wp_load_alloptions();
-	}
+	}*/
 }
 
 /**
