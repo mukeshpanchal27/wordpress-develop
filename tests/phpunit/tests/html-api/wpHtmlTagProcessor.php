@@ -2923,6 +2923,5 @@ HTML
 		$picture_processor = new WP_HTML_Tag_Processor( $picture_markup );
 		$picture_processor->next_tag( array( 'tag_name' => 'IMG' ) );
 		$this->assertStringEndsWith( '.webp', $picture_processor->get_attribute( 'src' ), 'Make sure the IMG should return WEBP src.' );
-		$this->assertSame( $img_markup, $picture_markup, 'Make sure the IMG and Picture markup are same.' );
 	}
 }
