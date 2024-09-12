@@ -73,24 +73,34 @@ if ( wp_using_themes() ) {
 		'is_date'              => 'get_date_template',
 		'is_archive'           => 'get_archive_template',
 	);
-	$template      = false;
 
-	// Loop through each of the template conditionals, and find the appropriate template file.
-	foreach ( $tag_templates as $tag => $template_getter ) {
-		if ( call_user_func( $tag ) ) {
-			$template = call_user_func( $template_getter );
-		}
-
-		if ( $template ) {
-			if ( 'is_attachment' === $tag ) {
-				remove_filter( 'the_content', 'prepend_attachment' );
-			}
-
-			break;
-		}
-	}
+	/**
+	 * Retrieves the template with the possibility of filtering the template path.
+	 *
+	 * The filter allows you to modify the template path before it is included.
+	 *
+	 * @since 6.4.0
+	 *
+	 * @param bool|string $template The path of the template to include. Default false.
+	 */
+	$template = apply_filters( 'pre_template_include', false );
 
 	if ( ! $template ) {
+		// Loop through each of the template conditionals, and find the appropriate template file.
+		foreach ( $tag_templates as $tag => $template_getter ) {
+			if ( call_user_func( $tag ) ) {
+				$template = call_user_func( $template_getter );
+			}
+
+			if ( $template ) {
+				if ( 'is_attachment' === $tag ) {
+					remove_filter( 'the_content', 'prepend_attachment' );
+				}
+
+				break;
+			}
+		}
+
 		$template = get_index_template();
 	}
 
