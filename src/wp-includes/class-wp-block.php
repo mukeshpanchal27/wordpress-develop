@@ -494,6 +494,10 @@ class WP_Block {
 						$inner_block->parsed_block = apply_filters( 'render_block_data', $inner_block->parsed_block, $source_block, $parent_block );
 
 						/** This filter is documented in wp-includes/blocks.php */
+						if ( $parent_block->context ) {
+							$inner_block->context = array_merge( $parent_block->context, $inner_block->context );
+						}
+
 						$inner_block->context = apply_filters( 'render_block_context', $inner_block->context, $inner_block->parsed_block, $parent_block );
 
 						$block_content .= $inner_block->render();
