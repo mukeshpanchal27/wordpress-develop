@@ -151,10 +151,10 @@ class WP_Block {
 	 * with the block's own context values. It removes specific context keys (`postId` and `postType`) that should
 	 * not be carried over. The block only consumes the context keys specified in its registered block type (`uses_context`).
 	 *
-	 * After updating its own context, the method also updates the context of inner blocks, if any, by passing down 
+	 * After updating its own context, the method also updates the context of inner blocks, if any, by passing down
 	 * any context values the block provides (`provides_context`).
 	 *
-	 * If the block has inner blocks, the method recursively processes them by creating new instances of `WP_Block` 
+	 * If the block has inner blocks, the method recursively processes them by creating new instances of `WP_Block`
 	 * for each inner block and updating their context based on the block's `provides_context` property.
 	 *
 	 * @since 6.7.0
