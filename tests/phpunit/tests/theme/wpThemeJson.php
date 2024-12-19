@@ -6130,7 +6130,7 @@ class Tests_Theme_wpThemeJson extends WP_UnitTestCase {
 			array(
 				'version' => WP_Theme_JSON::LATEST_SCHEMA,
 				'styles'  => array(
-					'css'   => 'body {color:purple;}',
+					'css'    => 'body {color:purple;}',
 					'blocks' => array(
 						'core/paragraph' => array(
 							'css' => 'color:red;',
@@ -6140,7 +6140,7 @@ class Tests_Theme_wpThemeJson extends WP_UnitTestCase {
 			)
 		);
 
-		$custom_css      = 'body {color:purple;}';
+		$custom_css       = 'body {color:purple;}';
 		$block_custom_css = ':root :where(p){color:red;}';
 
 		if ( version_compare( get_bloginfo( 'version' ), '6.7', '>=' ) ) {
