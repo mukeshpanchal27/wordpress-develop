@@ -6125,7 +6125,7 @@ class Tests_Theme_wpThemeJson extends WP_UnitTestCase {
 	 *
 	 * @ticket n.e.x.t
 	 */
-	public function test_get_styles_for_block_handles_block_custom_css() {
+	public function test_custom_css_behaviour() {
 		$theme_json = new WP_Theme_JSON(
 			array(
 				'version' => WP_Theme_JSON::LATEST_SCHEMA,
