@@ -300,6 +300,8 @@ jobs:
 
       - name: Add workflow summary
         run: cat ${{ runner.temp }}/summary.md >> $GITHUB_STEP_SUMMARY
+        env:
+          COMMITTED_ATTT: $(git show -s $GITHUB_SHA --format="%cI")
 
       - name: Set the base sha
         # Only needed when publishing results.
