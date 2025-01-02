@@ -94,7 +94,6 @@ jobs:
   # - Compare results.
   # - Add workflow summary.
   # - Set the base sha.
-  # - Set commit details.
   # - Publish performance results.
   # - Ensure version-controlled files are not modified or deleted.
   performance:
@@ -298,10 +297,13 @@ jobs:
       - name: Compare results
         run: node ./tests/performance/compare-results.js ${{ runner.temp }}/summary.md
 
+      - name: Check date time
+        run: echo "COMMITTED_AT_TEST=$(git show -s $GITHUB_SHA --format='%cI')" >> $GITHUB_ENV
+        env:
+          COMMITTED_AT_TEST: $(git show -s $GITHUB_SHA --format="%cI")
+
       - name: Add workflow summary
         run: cat ${{ runner.temp }}/summary.md >> $GITHUB_STEP_SUMMARY
-        env:
-          COMMITTED_ATTT: $(git show -s $GITHUB_SHA --format="%cI")
 
       - name: Set the base sha
         # Only needed when publishing results.
@@ -314,23 +316,12 @@ jobs:
             const baseRef = await github.rest.git.getRef({ owner: context.repo.owner, repo: context.repo.repo, ref: 'tags/${{ env.BASE_TAG }}' });
             return baseRef.data.object.sha;
 
-      - name: Set commit details
-        # Only needed when publishing results.
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/trunk' && ! inputs.memcached }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        id: commit-timestamp
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const commit_details = await github.rest.git.getCommit({ owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha });
-            return parseInt((new Date( commit_details.data.author.date ).getTime() / 1000).toFixed(0))
-
       - name: Publish performance results
         # Only publish results on pushes to trunk.
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/trunk' && ! inputs.memcached }}
         env:
           BASE_SHA: ${{ steps.base-sha.outputs.result }}
-          COMMITTED_AT: ${{ steps.commit-timestamp.outputs.result }}
+          COMMITTED_AT: $(git show -s $GITHUB_SHA --format="%cI")
           CODEVITALS_PROJECT_TOKEN: ${{ secrets.CODEVITALS_PROJECT_TOKEN }}
           HOST_NAME: "www.codevitals.run"
         run: |
