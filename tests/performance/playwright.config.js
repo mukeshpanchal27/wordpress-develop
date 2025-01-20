@@ -31,11 +31,11 @@ const config = defineConfig( {
 	webServer: {
 		...baseConfig.webServer,
 		command: 'npm run env:start',
-		browserName: 'chromium', // Use only Chromium.
 	},
 	use: {
 		...baseConfig.use,
 		video: 'off',
+		browserName: 'chromium', // Use only Chromium.
 	},
 } );
 
