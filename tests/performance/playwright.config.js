@@ -33,7 +33,6 @@ const config = defineConfig( {
 		command: 'npm run env:start',
 	},
 	use: {
-		...baseConfig.use,
 		video: 'off',
 		browserName: 'chromium', // Use only Chromium.
 	},
