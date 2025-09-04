@@ -6377,4 +6377,34 @@ class Tests_Theme_wpThemeJson extends WP_UnitTestCase {
 
 		$this->assertSame( $expected, $button_variations );
 	}
+
+	/**
+	 * Tests the custom CSS behaviour.
+	 *
+	 * @ticket n.e.x.t
+	 */
+	public function test_custom_css_behaviour() {
+		$theme_json = new WP_Theme_JSON(
+			array(
+				'version' => WP_Theme_JSON::LATEST_SCHEMA,
+				'styles'  => array(
+					'css'    => 'body {color:purple;}',
+					'blocks' => array(
+						'core/paragraph' => array(
+							'css' => 'color:red;',
+						),
+					),
+				),
+			)
+		);
+
+		$custom_css       = 'body {color:purple;}';
+		$block_custom_css = ':root :where(p){color:red;}';
+
+		if ( version_compare( get_bloginfo( 'version' ), '6.7', '>=' ) ) {
+			$this->assertSame( $custom_css, $theme_json->get_stylesheet( array( 'custom-css' ) ) );
+		} else {
+			$this->assertSame( $custom_css . $block_custom_css, $theme_json->get_custom_css() );
+		}
+	}
 }
