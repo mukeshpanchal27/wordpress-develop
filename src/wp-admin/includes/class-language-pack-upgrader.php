@@ -356,7 +356,7 @@ class Language_Pack_Upgrader extends WP_Upgrader {
 				$this->strings['incompatible_archive'],
 				sprintf(
 					/* translators: 1: .po, 2: .mo, 3: .l10n.php */
-					__( 'The language pack is missing either the %1$s, %2$s, or %3$s files.' ),
+					__( 'The language pack is missing both the %1$s and %2$s files, or the %3$s file.' ),
 					'<code>.po</code>',
 					'<code>.mo</code>',
 					'<code>.l10n.php</code>'
