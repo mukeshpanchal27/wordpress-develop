@@ -377,14 +377,16 @@ function wp_add_block_state_style_rule( &$css_rules, $state, $selector, $style, 
 		return;
 	}
 
-	$css_rules[] = array(
+	$css_rule = array(
 		'state'        => $state,
 		'selector'     => $selector,
 		'declarations' => $declarations,
 	);
 	if ( ! empty( $rules_group ) ) {
-		$css_rules[ count( $css_rules ) - 1 ]['rules_group'] = $rules_group;
+		$css_rule['rules_group'] = $rules_group;
 	}
+
+	$css_rules[] = $css_rule;
 }
 
 /**
