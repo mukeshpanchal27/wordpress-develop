@@ -14,8 +14,8 @@
  * @global int|string $_sidebar_being_rendered
  *
  * @param array    $attributes The block attributes.
- * @param string   $content The block content.
- * @param WP_Block $block The block.
+ * @param string   $content    The block content.
+ * @param WP_Block $block      The block.
  *
  * @return string Rendered block.
  */

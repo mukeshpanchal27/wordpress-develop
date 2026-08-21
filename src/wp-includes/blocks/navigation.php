@@ -411,7 +411,7 @@ class WP_Navigation_Block_Renderer {
 	 * @since 6.5.0
 	 *
 	 * @param string $overlay_template_part_id The overlay template part ID in format "theme//slug".
-	 * @param array  $attributes                The block attributes.
+	 * @param array  $attributes               The block attributes.
 	 * @return WP_Block_List Returns the inner blocks for the overlay template part.
 	 */
 	private static function get_overlay_blocks_from_template_part( $overlay_template_part_id, $attributes ) {
@@ -512,7 +512,7 @@ class WP_Navigation_Block_Renderer {
 	 * @since 6.5.0
 	 *
 	 * @param array    $attributes The block attributes.
-	 * @param WP_Block $block The parsed block.
+	 * @param WP_Block $block      The parsed block.
 	 * @return WP_Block_List Returns the inner blocks for the navigation block.
 	 */
 	private static function get_inner_blocks( $attributes, $block ) {
@@ -682,8 +682,8 @@ class WP_Navigation_Block_Renderer {
 	 * @since 7.0.0
 	 *
 	 * @param bool  $is_hidden_by_default Whether the responsive menu is hidden by default.
-	 * @param bool  $has_custom_overlay Whether a custom overlay is used.
-	 * @param array $colors The colors array.
+	 * @param bool  $has_custom_overlay   Whether a custom overlay is used.
+	 * @param array $colors               The colors array.
 	 * @return array Returns the responsive container classes.
 	 */
 	private static function get_responsive_container_classes( $is_hidden_by_default, $has_custom_overlay, $colors ) {
@@ -722,8 +722,8 @@ class WP_Navigation_Block_Renderer {
 	 *
 	 * @since 6.5.0
 	 *
-	 * @param array         $attributes The block attributes.
-	 * @param WP_Block_List $inner_blocks The list of inner blocks.
+	 * @param array         $attributes        The block attributes.
+	 * @param WP_Block_List $inner_blocks      The list of inner blocks.
 	 * @param string        $inner_blocks_html The markup for the inner blocks.
 	 * @return string Returns the container markup.
 	 */
@@ -961,7 +961,7 @@ class WP_Navigation_Block_Renderer {
 	 *
 	 * @since 6.5.0
 	 *
-	 * @param array         $attributes The block attributes.
+	 * @param array         $attributes   The block attributes.
 	 * @param WP_Block_List $inner_blocks The list of inner blocks.
 	 * @return string Returns the navigation wrapper markup.
 	 */
