@@ -11,7 +11,7 @@
 		"ghcrRepo": "WordPress/gutenberg/gutenberg-wp-develop-build"
 	},
 	"engines": {
-		"node": ">=20.10.0",
+		"node": ">=20.10.0 <21",
 		"npm": ">=10.2.3"
 	},
 	"author": "The WordPress Contributors",
