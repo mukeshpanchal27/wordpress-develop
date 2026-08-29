@@ -816,7 +816,10 @@ add_action( 'init', '_wp_register_default_font_collections' );
 
 // Icons.
 add_action( 'init', '_wp_register_default_icon_collections', 0 );
-add_action( 'init', '_wp_register_default_icons' );
+/*
+ * The default icons themselves are registered lazily, on first read of the
+ * icons registry. See WP_Icons_Registry::load_default_icons().
+ */
 
 // Add ignoredHookedBlocks metadata attribute to the template and template part post types.
 add_filter( 'rest_pre_insert_wp_template', 'inject_ignored_hooked_blocks_metadata_attributes' );

@@ -453,4 +453,108 @@ class Tests_Icons_WpIconsRegistry extends WP_UnitTestCase {
 
 		$this->assertNull( $icon['content'] );
 	}
+
+	/**
+	 * Resets the registry singleton so a test starts with the default icons
+	 * unloaded.
+	 *
+	 * Needed because tear_down() unregisters a test collection, and collection
+	 * unregistration reads the icon registry in order to drop that collection's
+	 * icons — which triggers the lazy load into the replacement instance.
+	 */
+	private function reset_registry() {
+		$reflection = new ReflectionClass( WP_Icons_Registry::class );
+		$property   = $reflection->getProperty( 'instance' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$property->setAccessible( true );
+		}
+		$property->setValue( null, null );
+
+		$this->registry = WP_Icons_Registry::get_instance();
+	}
+
+	/**
+	 * Reads the registered icons property directly, so that the assertion itself
+	 * does not trigger the lazy registration it is checking for.
+	 *
+	 * @return array Registered icons.
+	 */
+	private function get_registered_icons_property() {
+		$reflection = new ReflectionClass( WP_Icons_Registry::class );
+		$property   = $reflection->getProperty( 'registered_icons' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$property->setAccessible( true );
+		}
+
+		return $property->getValue( $this->registry );
+	}
+
+	/**
+	 * @ticket 00000
+	 *
+	 * @covers ::load_default_icons
+	 */
+	public function test_default_icons_are_not_registered_until_the_registry_is_read() {
+		$this->reset_registry();
+
+		$this->assertSame(
+			array(),
+			$this->get_registered_icons_property(),
+			'The default icons should not be registered before the registry is read.'
+		);
+	}
+
+	/**
+	 * @ticket 00000
+	 *
+	 * @covers ::load_default_icons
+	 */
+	public function test_default_icons_are_registered_on_first_read() {
+		$this->reset_registry();
+
+		$icon = $this->registry->get_registered_icon( 'core/arrow-left' );
+
+		$this->assertIsArray( $icon, 'A core icon should resolve without explicit registration.' );
+		$this->assertSame( 'core/arrow-left', $icon['name'] );
+		$this->assertStringStartsWith( '<svg', $icon['content'] );
+		$this->assertNotEmpty(
+			$this->get_registered_icons_property(),
+			'Reading the registry should have registered the default icons.'
+		);
+	}
+
+	/**
+	 * @ticket 00000
+	 *
+	 * @covers ::is_registered
+	 */
+	public function test_is_registered_triggers_default_icon_registration() {
+		$this->reset_registry();
+
+		$this->assertTrue( $this->registry->is_registered( 'core/arrow-left' ) );
+	}
+
+	/**
+	 * The default icons belong to the `core` collection, which is normally
+	 * registered on `init`. A lazy load can happen before that, so the collection
+	 * must be ensured at load time rather than assumed to exist.
+	 *
+	 * @ticket 00000
+	 *
+	 * @covers ::load_default_icons
+	 */
+	public function test_default_icons_load_even_if_core_collection_is_missing() {
+		$collections = WP_Icon_Collections_Registry::get_instance();
+		if ( $collections->is_registered( 'core' ) ) {
+			$collections->unregister( 'core' );
+		}
+		$this->assertFalse( $collections->is_registered( 'core' ) );
+
+		$this->reset_registry();
+
+		$icons = $this->registry->get_registered_icons();
+
+		$this->assertNotEmpty( $icons, 'Default icons should register even when the collection was not set up yet.' );
+		$this->assertTrue( $collections->is_registered( 'core' ), 'The core collection should be registered on demand.' );
+	}
 }
