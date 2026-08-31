@@ -3532,6 +3532,10 @@ class WP_Theme_JSON {
 			$selectors = empty( $selectors ) ? static::get_blocks_metadata() : $selectors;
 		}
 
+		if ( ! $include_node_paths_only ) {
+			$selectors = empty( $selectors ) ? static::get_blocks_metadata() : $selectors;
+		}
+
 		foreach ( $theme_json['styles']['blocks'] as $name => $node ) {
 			$node_path = array( 'styles', 'blocks', $name );
 			if ( $include_node_paths_only ) {
