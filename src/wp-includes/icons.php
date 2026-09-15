@@ -98,6 +98,15 @@ function _wp_register_default_icon_collections() {
  * @access private
  */
 function _wp_register_default_icons() {
+	/*
+	 * Icons can be requested before `init` now that the default icons are
+	 * registered on first read, so make sure the collection they belong to
+	 * exists rather than relying on the `init` callback having run.
+	 */
+	if ( ! WP_Icon_Collections_Registry::get_instance()->is_registered( 'core' ) ) {
+		_wp_register_default_icon_collections();
+	}
+
 	$icons_directory = ABSPATH . WPINC . '/images/icon-library/';
 	$manifest_path   = ABSPATH . WPINC . '/assets/icon-library-manifest.php';
 

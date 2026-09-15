@@ -21,6 +21,14 @@ class WP_Icons_Registry {
 	protected $registered_icons = array();
 
 	/**
+	 * Whether the default icons bundled with core have been registered yet.
+	 *
+	 * @since 7.1.0
+	 * @var bool
+	 */
+	protected $default_icons_loaded = false;
+
+	/**
 	 * Container for the main instance of the class.
 	 *
 	 * @since 7.0.0
@@ -336,6 +344,8 @@ class WP_Icons_Registry {
 	 * @return array[] Array of arrays containing the registered icon properties.
 	 */
 	public function get_registered_icons( $search = '' ) {
+		$this->load_default_icons();
+
 		$icons = array();
 
 		foreach ( $this->registered_icons as $icon ) {
@@ -362,7 +372,33 @@ class WP_Icons_Registry {
 	 * @return bool True if the icon is registered, false otherwise.
 	 */
 	public function is_registered( $icon_name ) {
+		$this->load_default_icons();
+
 		return isset( $this->registered_icons[ $icon_name ] );
+	}
+
+	/**
+	 * Registers the default icons bundled with core, once, on first use.
+	 *
+	 * The core icon manifest declares 88 icons, each with a translated label.
+	 * Registering them eagerly costs every request — including front-end
+	 * requests that never render an icon — so registration is deferred until
+	 * something actually reads the registry.
+	 *
+	 * @since 7.1.0
+	 */
+	protected function load_default_icons() {
+		if ( $this->default_icons_loaded ) {
+			return;
+		}
+
+		/*
+		 * Set before registering: _wp_register_default_icons() calls back into
+		 * this class, and this flag is what stops that from recursing.
+		 */
+		$this->default_icons_loaded = true;
+
+		_wp_register_default_icons();
 	}
 
 	/**
