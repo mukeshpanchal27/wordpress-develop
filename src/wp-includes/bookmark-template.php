@@ -66,6 +66,18 @@ function _walk_bookmarks( $bookmarks, $args = '' ) {
 
 	$output = ''; // Blank string to start with.
 
+	/*
+	 * Read the loop-invariant options once.
+	 *
+	 * The loop below called get_option() up to three times for every bookmark, and each
+	 * call runs the option filters even when alloptions is warm. Each read stays behind
+	 * the same argument check that guards its only use, so no option is read for a set
+	 * of arguments that never reached it before.
+	 */
+	$links_updated_date_format = $parsed_args['show_updated'] ? get_option( 'links_updated_date_format' ) : '';
+	$gmt_offset_in_seconds     = $parsed_args['show_updated'] ? (int) ( (float) get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) : 0;
+	$site_url                  = $parsed_args['show_images'] ? get_option( 'siteurl' ) : '';
+
 	foreach ( (array) $bookmarks as $bookmark ) {
 		if ( ! isset( $bookmark->recently_updated ) ) {
 			$bookmark->recently_updated = false;
@@ -89,8 +101,8 @@ function _walk_bookmarks( $bookmarks, $args = '' ) {
 					/* translators: %s: Date and time of last update. */
 					__( 'Last updated: %s' ),
 					gmdate(
-						get_option( 'links_updated_date_format' ),
-						$bookmark->link_updated_f + (int) ( (float) get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )
+						$links_updated_date_format,
+						$bookmark->link_updated_f + $gmt_offset_in_seconds
 					)
 				);
 				$title .= ')';
@@ -120,7 +132,7 @@ function _walk_bookmarks( $bookmarks, $args = '' ) {
 			if ( str_starts_with( $bookmark->link_image, 'http' ) ) {
 				$output .= '<img src="' . $bookmark->link_image . '"' . $alt . $title . ' />';
 			} else { // If it's a relative path.
-				$output .= '<img src="' . get_option( 'siteurl' ) . $bookmark->link_image . '"' . $alt . $title . ' />';
+				$output .= '<img src="' . $site_url . $bookmark->link_image . '"' . $alt . $title . ' />';
 			}
 			if ( $parsed_args['show_name'] ) {
 				$output .= " $name";
