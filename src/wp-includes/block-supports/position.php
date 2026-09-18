@@ -64,10 +64,22 @@ function wp_render_position_support( $block_content, $block ) {
 	}
 
 	$style_attribute = $block['attrs']['style'] ?? null;
-	$class_name      = wp_unique_id( 'wp-container-' );
+	$position_type   = $style_attribute['position']['type'] ?? '';
+	/*
+	 * Derive the container class from the position styles rather than from a
+	 * counter, so that blocks resolving to the same CSS share a single rule in
+	 * the style engine store instead of emitting one rule per block instance.
+	 *
+	 * This matches wp_render_layout_support_flag(), which hashes its own style
+	 * inputs for the same reason, and it keeps the class stable across renders
+	 * such as the Query block's enhanced pagination.
+	 */
+	$class_name      = wp_unique_id_from_values(
+		array( $style_attribute['position'] ?? array() ),
+		'wp-container-'
+	);
 	$selector        = ".$class_name";
 	$position_styles = array();
-	$position_type   = $style_attribute['position']['type'] ?? '';
 	$wrapper_classes = array();
 
 	if (
