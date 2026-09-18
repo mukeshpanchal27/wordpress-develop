@@ -3574,17 +3574,28 @@ function convert_smilies( $text ) {
 	// Ignore processing of specific tags.
 	$tags_to_ignore       = 'code|pre|style|script|textarea';
 	$ignore_block_element = '';
+	$ignore_tag_regex     = '/^<(' . $tags_to_ignore . ')[^>]*>/';
 
 	for ( $i = 0; $i < $stop; $i++ ) {
 		$content = $textarr[ $i ];
 
+		/*
+		 * The split above alternates between tags and the text between them, so test
+		 * the first character once and reuse the answer. The ignore-tag pattern is
+		 * anchored to `^<` and can only match a tag, and the smiley replacement only
+		 * ever runs on text, so this keeps each of them off the chunks it cannot apply
+		 * to. This mirrors how wptexturize(), which this loop was taken from,
+		 * dispatches on the first character of each chunk.
+		 */
+		$is_tag = isset( $content[0] ) && '<' === $content[0];
+
 		// If we're in an ignore block, wait until we find its closing tag.
-		if ( '' === $ignore_block_element && preg_match( '/^<(' . $tags_to_ignore . ')[^>]*>/', $content, $matches ) ) {
+		if ( '' === $ignore_block_element && $is_tag && preg_match( $ignore_tag_regex, $content, $matches ) ) {
 			$ignore_block_element = $matches[1];
 		}
 
 		// If it's not a tag and not in ignore block.
-		if ( '' === $ignore_block_element && strlen( $content ) > 0 && '<' !== $content[0] ) {
+		if ( '' === $ignore_block_element && ! $is_tag && strlen( $content ) > 0 ) {
 			$content = preg_replace_callback( $wp_smiliessearch, 'translate_smiley', $content );
 		}
 
