@@ -586,6 +586,28 @@ function _wp_get_entity_view_config_posttype_wp_template( $data ) {
 
 	$templates = get_block_templates( array(), 'wp_template' );
 
+	/*
+	 * Prime the user cache for every template author in a single query. The 'user'
+	 * branch below calls get_user_by() once per template, which is one query apiece
+	 * on a cold cache.
+	 */
+	$template_author_ids = array_unique( array_filter( array_map( 'intval', wp_list_pluck( $templates, 'author' ) ) ) );
+	if ( ! empty( $template_author_ids ) ) {
+		cache_users( $template_author_ids );
+	}
+
+	/*
+	 * Memoize the lookups the branches below share. Each was repeated for every
+	 * template even though the answers are the same for all of them, and get_plugins()
+	 * in particular scans the plugin directory and parses every plugin file header.
+	 * All three are resolved lazily, so a set of templates that never reaches a branch
+	 * still pays nothing for it.
+	 */
+	$theme_names          = array();
+	$plugin_names_by_slug = array();
+	$plugin_files_by_slug = null;
+	$all_plugins          = null;
+
 	// Collect unique authors, tracking whether they come from a registered
 	// source (theme, plugin, site) so we can sort those before user ones.
 	$seen_authors       = array();
@@ -636,7 +658,11 @@ function _wp_get_entity_view_config_posttype_wp_template( $data ) {
 		$author_text = '';
 		switch ( $original_source ) {
 			case 'theme':
-				$theme_name  = wp_get_theme( $template->theme )->get( 'Name' );
+				if ( ! array_key_exists( $template->theme, $theme_names ) ) {
+					$theme_names[ $template->theme ] = wp_get_theme( $template->theme )->get( 'Name' );
+				}
+
+				$theme_name  = $theme_names[ $template->theme ];
 				$author_text = empty( $theme_name ) ? $template->theme : $theme_name;
 				break;
 			case 'plugin':
@@ -645,22 +671,33 @@ function _wp_get_entity_view_config_posttype_wp_template( $data ) {
 				}
 				$plugin_name = '';
 				if ( isset( $template->plugin ) ) {
-					$plugins = wp_get_active_and_valid_plugins();
+					if ( null === $plugin_files_by_slug ) {
+						$plugin_files_by_slug = array();
 
-					foreach ( $plugins as $plugin_file ) {
-						$plugin_basename      = plugin_basename( $plugin_file );
-						list( $plugin_slug, ) = explode( '/', $plugin_basename );
+						foreach ( wp_get_active_and_valid_plugins() as $plugin_file ) {
+							$plugin_basename      = plugin_basename( $plugin_file );
+							list( $plugin_slug, ) = explode( '/', $plugin_basename );
 
-						if ( $plugin_slug === $template->plugin ) {
-							$plugin_data = get_plugin_data( $plugin_file );
-
-							if ( ! empty( $plugin_data['Name'] ) ) {
-								$plugin_name = $plugin_data['Name'];
+							// The scan this replaces stopped at the first match, so keep the first file seen for a slug.
+							if ( ! isset( $plugin_files_by_slug[ $plugin_slug ] ) ) {
+								$plugin_files_by_slug[ $plugin_slug ] = $plugin_file;
 							}
-
-							break;
 						}
 					}
+
+					if ( ! array_key_exists( $template->plugin, $plugin_names_by_slug ) ) {
+						$plugin_names_by_slug[ $template->plugin ] = '';
+
+						if ( isset( $plugin_files_by_slug[ $template->plugin ] ) ) {
+							$plugin_data = get_plugin_data( $plugin_files_by_slug[ $template->plugin ] );
+
+							if ( ! empty( $plugin_data['Name'] ) ) {
+								$plugin_names_by_slug[ $template->plugin ] = $plugin_data['Name'];
+							}
+						}
+					}
+
+					$plugin_name = $plugin_names_by_slug[ $template->plugin ];
 				}
 
 				/*
@@ -668,10 +705,13 @@ function _wp_get_entity_view_config_posttype_wp_template( $data ) {
 				 * compatibility with templates that were registered before the plugin attribute was added.
 				 */
 				if ( '' === $plugin_name ) {
-					$plugins         = get_plugins();
+					if ( null === $all_plugins ) {
+						$all_plugins = get_plugins();
+					}
+
 					$plugin_basename = plugin_basename( sanitize_text_field( $template->theme . '.php' ) );
-					if ( isset( $plugins[ $plugin_basename ] ) && isset( $plugins[ $plugin_basename ]['Name'] ) ) {
-						$plugin_name = $plugins[ $plugin_basename ]['Name'];
+					if ( isset( $all_plugins[ $plugin_basename ] ) && isset( $all_plugins[ $plugin_basename ]['Name'] ) ) {
+						$plugin_name = $all_plugins[ $plugin_basename ]['Name'];
 					} else {
 						$plugin_name = $template->plugin ?? $template->theme;
 					}
