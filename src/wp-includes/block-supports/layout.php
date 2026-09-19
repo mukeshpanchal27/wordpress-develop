@@ -1014,8 +1014,7 @@ function wp_render_layout_support_flag( $block_content, $block ) {
 	}
 
 	$global_settings          = wp_get_global_settings();
-	$viewport_settings        = $global_settings['viewport'] ?? null;
-	$responsive_media_queries = WP_Theme_JSON::get_viewport_media_queries( $viewport_settings );
+	$responsive_media_queries = _wp_get_viewport_media_queries();
 	$child_layout             = $style_attr['layout'] ?? null;
 
 	/*
