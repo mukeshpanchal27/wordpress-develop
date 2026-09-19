@@ -2662,6 +2662,17 @@ function get_calendar( $args = array() ) {
 	// week_begins = 0 stands for Sunday.
 	$week_begins = (int) get_option( 'start_of_week' );
 
+	/*
+	 * Read the current date once.
+	 *
+	 * Every current_time() call builds a DateTimeZone and a DateTime, and runs the
+	 * option filters behind wp_timezone(). The day loop below compares the current
+	 * day, month, and year against each day of the month, so reading them there
+	 * repeats that work up to three times per day. A single snapshot also keeps the
+	 * three comparisons consistent when a render straddles midnight.
+	 */
+	list( $today_year, $today_month, $today_day ) = array_map( 'intval', explode( '-', current_time( 'Y-m-d' ) ) );
+
 	// Let's figure out when we are.
 	if ( ! empty( $monthnum ) && ! empty( $year ) ) {
 		$thismonth = (int) $monthnum;
@@ -2686,8 +2697,8 @@ function get_calendar( $args = array() ) {
 			$thismonth = (int) substr( $m, 4, 2 );
 		}
 	} else {
-		$thisyear  = (int) current_time( 'Y' );
-		$thismonth = (int) current_time( 'm' );
+		$thisyear  = $today_year;
+		$thismonth = $today_month;
 	}
 
 	$unixmonth = mktime( 0, 0, 0, $thismonth, 1, $thisyear );
@@ -2786,6 +2797,10 @@ function get_calendar( $args = array() ) {
 	$newrow      = false;
 	$daysinmonth = (int) gmdate( 't', $unixmonth );
 
+	/* translators: Post calendar label. %s: Date. */
+	$posts_published_label = __( 'Posts published on %s' );
+	$archive_date_format   = _x( 'F j, Y', 'daily archives date format' );
+
 	for ( $day = 1; $day <= $daysinmonth; ++$day ) {
 		if ( $newrow ) {
 			$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
@@ -2793,9 +2808,9 @@ function get_calendar( $args = array() ) {
 
 		$newrow = false;
 
-		if ( (int) current_time( 'j' ) === $day
-			&& (int) current_time( 'm' ) === $thismonth
-			&& (int) current_time( 'Y' ) === $thisyear
+		if ( $today_day === $day
+			&& $today_month === $thismonth
+			&& $today_year === $thisyear
 		) {
 			$calendar_output .= '<td id="today">';
 		} else {
@@ -2804,9 +2819,8 @@ function get_calendar( $args = array() ) {
 
 		if ( in_array( $day, $daywithpost, true ) ) {
 			// Any posts today?
-			$date_format = gmdate( _x( 'F j, Y', 'daily archives date format' ), strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
-			/* translators: Post calendar label. %s: Date. */
-			$label            = sprintf( __( 'Posts published on %s' ), $date_format );
+			$date_format      = gmdate( $archive_date_format, strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
+			$label            = sprintf( $posts_published_label, $date_format );
 			$calendar_output .= sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				get_day_link( $thisyear, $thismonth, $day ),
