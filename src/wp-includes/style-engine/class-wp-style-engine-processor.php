@@ -170,20 +170,30 @@ class WP_Style_Engine_Processor {
 			);
 		}
 
-		// Combine selectors that have the same styles.
+		/*
+		 * Group the selectors by their styles in a single pass.
+		 *
+		 * Scanning the whole list for each selector instead made this quadratic in the
+		 * number of rules, which matters because a store can hold a rule per block
+		 * instance. Keys are added in the order their first selector was seen, and each
+		 * group keeps its selectors in list order, so the grouping below is reached in
+		 * the same order as before.
+		 */
+		$grouped_selectors = array();
 		foreach ( $selectors_json as $selector => $json ) {
-			// Get selectors that use the same styles.
-			$duplicates = array_keys( $selectors_json, $json, true );
+			$grouped_selectors[ $json ][] = $selector;
+		}
+
+		// Combine selectors that have the same styles.
+		foreach ( $grouped_selectors as $duplicates ) {
 			// Skip if there are no duplicates.
 			if ( 1 >= count( $duplicates ) ) {
 				continue;
 			}
 
-			$declarations = $this->css_rules[ $selector ]->get_declarations();
+			$declarations = $this->css_rules[ $duplicates[0] ]->get_declarations();
 
 			foreach ( $duplicates as $key ) {
-				// Unset the duplicates from the $selectors_json array to avoid looping through them as well.
-				unset( $selectors_json[ $key ] );
 				// Remove the rules from the rules collection.
 				unset( $this->css_rules[ $key ] );
 			}
