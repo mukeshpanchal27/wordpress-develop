@@ -560,8 +560,7 @@ function wp_render_block_states_support( $block_content, $block ) {
 
 	$supported_pseudo_states  = WP_Theme_JSON::VALID_BLOCK_PSEUDO_SELECTORS[ $block_name ] ?? array();
 	$css_rules                = array();
-	$viewport_settings        = wp_get_global_settings( array( 'viewport' ) );
-	$responsive_media_queries = WP_Theme_JSON::get_viewport_media_queries( $viewport_settings );
+	$responsive_media_queries = _wp_get_viewport_media_queries();
 
 	foreach ( $supported_pseudo_states as $pseudo_state ) {
 		if ( empty( $style[ $pseudo_state ] ) || ! is_array( $style[ $pseudo_state ] ) ) {

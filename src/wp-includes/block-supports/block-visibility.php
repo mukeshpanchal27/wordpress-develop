@@ -44,13 +44,7 @@ function wp_render_block_visibility_support( $block_content, $block ) {
 		if ( ! is_array( $viewport_config ) || empty( $viewport_config ) ) {
 			return $block_content;
 		}
-		$viewport_settings      = wp_get_global_settings( array( 'viewport' ) );
-		$viewport_media_queries = WP_Theme_JSON::get_viewport_media_queries(
-			$viewport_settings,
-			array(
-				'include_desktop' => true,
-			)
-		);
+		$viewport_media_queries = _wp_get_viewport_media_queries( true );
 
 		/*
 		 * Viewport media queries are keyed by style-state names (`@mobile`,

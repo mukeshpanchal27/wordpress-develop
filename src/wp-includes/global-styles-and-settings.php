@@ -445,12 +445,50 @@ function wp_theme_has_theme_json() {
 }
 
 /**
+ * Returns the responsive viewport media queries derived from the global settings.
+ *
+ * The queries are the same for every block in a request, but several block supports
+ * need them while rendering each block. Deriving them means reading the global
+ * settings and re-running the breakpoint sanitization, so the result is cached in
+ * the non-persistent `theme_json` group alongside the settings it is derived from,
+ * and is cleared by the same wp_clean_theme_json_cache() call.
+ *
+ * @since 7.2.0
+ * @access private
+ *
+ * @param bool $include_desktop Optional. Whether to include the `@desktop` query.
+ *                              Default false.
+ * @return array Media queries keyed by viewport state, e.g. `@mobile`.
+ */
+function _wp_get_viewport_media_queries( $include_desktop = false ) {
+	$cache_key = $include_desktop
+		? 'wp_get_viewport_media_queries_desktop'
+		: 'wp_get_viewport_media_queries';
+
+	$media_queries = wp_cache_get( $cache_key, 'theme_json' );
+
+	if ( false === $media_queries ) {
+		$media_queries = WP_Theme_JSON::get_viewport_media_queries(
+			wp_get_global_settings( array( 'viewport' ) ),
+			$include_desktop ? array( 'include_desktop' => true ) : array()
+		);
+
+		wp_cache_set( $cache_key, $media_queries, 'theme_json' );
+	}
+
+	return $media_queries;
+}
+
+/**
  * Cleans the caches under the theme_json group.
  *
  * @since 6.2.0
+ * @since 7.2.0 Also clears the derived viewport media queries.
  */
 function wp_clean_theme_json_cache() {
 	wp_cache_delete( 'wp_get_global_stylesheet', 'theme_json' );
+	wp_cache_delete( 'wp_get_viewport_media_queries', 'theme_json' );
+	wp_cache_delete( 'wp_get_viewport_media_queries_desktop', 'theme_json' );
 	wp_cache_delete( 'wp_get_global_styles_svg_filters', 'theme_json' );
 	wp_cache_delete( 'wp_get_global_settings_custom', 'theme_json' );
 	wp_cache_delete( 'wp_get_global_settings_theme', 'theme_json' );
