@@ -454,4 +454,74 @@ class Tests_Style_Engine_wpStyleEngineProcessor extends WP_UnitTestCase {
 			'Return value of get_css() does not match expectations when combining 4 CSS rules'
 		);
 	}
+
+	/**
+	 * Tests that interleaved groups of duplicate CSS rules are each combined, and that
+	 * unique rules keep their place while combined rules are appended in the order
+	 * their first selector was added.
+	 *
+	 * @covers ::get_css
+	 */
+	public function test_should_combine_interleaved_groups_of_css_rules_in_order() {
+		$processor = new WP_Style_Engine_Processor();
+		$processor->add_rules(
+			array(
+				new WP_Style_Engine_CSS_Rule( '.red-one', array( 'color' => 'red' ) ),
+				new WP_Style_Engine_CSS_Rule( '.blue-one', array( 'color' => 'blue' ) ),
+				new WP_Style_Engine_CSS_Rule( '.red-two', array( 'color' => 'red' ) ),
+				new WP_Style_Engine_CSS_Rule( '.green', array( 'color' => 'green' ) ),
+				new WP_Style_Engine_CSS_Rule( '.blue-two', array( 'color' => 'blue' ) ),
+				new WP_Style_Engine_CSS_Rule( '.red-three', array( 'color' => 'red' ) ),
+				new WP_Style_Engine_CSS_Rule( '.yellow', array( 'color' => 'yellow' ) ),
+			)
+		);
+
+		$this->assertSame(
+			'.green{color:green;}.yellow{color:yellow;}.red-one,.red-two,.red-three{color:red;}.blue-one,.blue-two{color:blue;}',
+			$processor->get_css(
+				array(
+					'prettify' => false,
+					'optimize' => true,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Tests that CSS rules with the same declarations in a different order are combined,
+	 * using the declarations of the first rule added.
+	 *
+	 * @covers ::get_css
+	 */
+	public function test_should_combine_css_rules_using_declarations_of_first_rule() {
+		$processor = new WP_Style_Engine_Processor();
+		$processor->add_rules(
+			array(
+				new WP_Style_Engine_CSS_Rule(
+					'.first',
+					array(
+						'color'   => 'red',
+						'padding' => '1px',
+					)
+				),
+				new WP_Style_Engine_CSS_Rule(
+					'.second',
+					array(
+						'padding' => '1px',
+						'color'   => 'red',
+					)
+				),
+			)
+		);
+
+		$this->assertSame(
+			'.first,.second{color:red;padding:1px;}',
+			$processor->get_css(
+				array(
+					'prettify' => false,
+					'optimize' => true,
+				)
+			)
+		);
+	}
 }
