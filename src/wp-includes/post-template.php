@@ -304,7 +304,7 @@ function get_the_content( $more_link_text = null, $strip_teaser = false, $post =
 
 	if ( null === $more_link_text ) {
 		$more_link_text = sprintf(
-			'<span aria-label="%1$s">%2$s</span>',
+			'%2$s<span class="screen-reader-text"> %1$s</span>',
 			sprintf(
 				/* translators: %s: Post title. */
 				__( 'Continue reading %s' ),
