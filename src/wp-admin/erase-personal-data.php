@@ -113,7 +113,7 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 	<form action="<?php echo esc_url( admin_url( 'erase-personal-data.php' ) ); ?>" method="post" class="wp-privacy-request-form">
 		<h2><?php esc_html_e( 'Add Data Erasure Request' ); ?></h2>
 		<div class="wp-privacy-request-form-field">
-			<table class="form-table">
+			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
 						<label for="username_or_email_for_privacy_request"><?php esc_html_e( 'Username or email address' ); ?></label>
