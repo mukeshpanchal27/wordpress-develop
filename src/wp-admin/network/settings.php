@@ -505,7 +505,7 @@ if ( isset( $_GET['updated'] ) ) {
 		if ( $menu_items ) :
 			?>
 			<h2 id="wp-settings-section-menu-settings"><?php _e( 'Menu Settings' ); ?></h2>
-			<table id="menu" class="form-table">
+			<table id="menu" class="form-table" role="presentation">
 				<?php $enable_administration_menus_title = __( 'Enable administration menus' ); ?>
 				<tr>
 					<th scope="row"><?php echo $enable_administration_menus_title; ?></th>
