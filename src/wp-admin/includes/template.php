@@ -741,7 +741,7 @@ function meta_form( $post = null ) {
 <table id="newmeta">
 <thead>
 <tr>
-<th class="left"><label for="metakeyselect"><?php _ex( 'Name', 'meta name' ); ?></label></th>
+<th class="left"><label for="<?php echo $keys ? 'metakeyselect' : 'metakeyinput'; ?>"><?php _ex( 'Name', 'meta name' ); ?></label></th>
 <th><label for="metavalue"><?php _e( 'Value' ); ?></label></th>
 </tr>
 </thead>
@@ -761,7 +761,7 @@ function meta_form( $post = null ) {
 		}
 		?>
 </select>
-<input class="hidden" type="text" id="metakeyinput" name="metakeyinput" value="" aria-label="<?php _e( 'New custom field name' ); ?>" />
+<input class="hidden" type="text" id="metakeyinput" name="metakeyinput" value="" aria-label="<?php esc_attr_e( 'New custom field name' ); ?>" />
 <button type="button" id="newmeta-button" class="button button-small hide-if-no-js" onclick="jQuery('#metakeyinput, #metakeyselect, #enternew, #cancelnew').toggleClass('hidden');jQuery('#metakeyinput, #metakeyselect').filter(':visible').trigger('focus');">
 <span id="enternew"><?php _e( 'Enter new' ); ?></span>
 <span id="cancelnew" class="hidden"><?php _e( 'Cancel' ); ?></span></button>
