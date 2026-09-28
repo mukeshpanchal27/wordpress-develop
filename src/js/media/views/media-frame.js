@@ -199,7 +199,7 @@ MediaFrame = Frame.extend(/** @lends wp.media.view.MediaFrame.prototype */{
 		var menu = this.$el.find( '.media-menu' );
 
 		menu.toggleClass( 'visible' );
-		$( event.target ).attr( 'aria-expanded', menu.hasClass( 'visible' ) );
+		$( event.currentTarget ).attr( 'aria-expanded', menu.hasClass( 'visible' ) );
 	},
 
 	/**
