@@ -143,7 +143,7 @@ function display_setup_form( $error = null ) {
 						<div id="pass-strength-result" aria-live="polite"></div>
 					</div>
 					<button type="button" class="button wp-hide-pw user-new-password-toggle hide-if-no-js" data-start-masked="<?php echo (int) isset( $_POST['admin_password'] ); ?>" data-toggle="0" aria-label="<?php esc_attr_e( 'Hide password' ); ?>">
-						<span class="dashicons dashicons-hidden"></span>
+						<span class="dashicons dashicons-hidden" aria-hidden="true"></span>
 						<span class="text"><?php _e( 'Hide' ); ?></span>
 					</button>
 				</div>
