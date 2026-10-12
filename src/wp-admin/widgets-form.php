@@ -298,7 +298,7 @@ if ( isset( $_GET['editwidget'] ) && $_GET['editwidget'] ) {
 
 	<p class="describe"><?php _e( 'Select both the sidebar for this widget and the position of the widget in that sidebar.' ); ?></p>
 	<div class="widget-position">
-	<table class="widefat"><thead><tr><th><?php _e( 'Sidebar' ); ?></th><th><?php _e( 'Position' ); ?></th></tr></thead><tbody>
+	<table class="widefat"><thead><tr><th scope="col"><?php _e( 'Sidebar' ); ?></th><th scope="col"><?php _e( 'Position' ); ?></th></tr></thead><tbody>
 	<?php
 	foreach ( $wp_registered_sidebars as $sidebar_name => $sidebar_data ) {
 		echo "\t\t<tr><td><label><input type='radio' name='sidebar' value='" . esc_attr( $sidebar_name ) . "'" .
@@ -321,7 +321,16 @@ if ( isset( $_GET['editwidget'] ) && $_GET['editwidget'] ) {
 
 			$selected = '';
 
-			echo "\t\t<select name='{$sidebar_name}_position'>\n";
+			$position_id = esc_attr( "{$sidebar_name}_position" );
+
+			echo "\t\t<label for='$position_id' class='screen-reader-text'>" .
+				sprintf(
+					/* translators: Hidden accessibility text. %s: Sidebar name. */
+					__( 'Position in %s' ),
+					$sidebar_data['name']
+				) .
+				"</label>\n";
+			echo "\t\t<select name='{$sidebar_name}_position' id='$position_id'>\n";
 			echo "\t\t<option value=''>" . __( '&mdash; Select &mdash;' ) . "</option>\n";
 
 			for ( $i = 1; $i <= $widget_count; $i++ ) {
