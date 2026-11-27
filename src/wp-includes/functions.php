@@ -7631,7 +7631,7 @@ function _validate_cache_id( $object_id ) {
 	}
 
 	/* translators: %s: The type of the given object ID. */
-	$message = sprintf( __( 'Object ID must be an integer, %s given.' ), gettype( $object_id ) );
+	$message = sprintf( __( 'Object ID must be an integer, %s given.' ), get_debug_type( $object_id ) );
 	_doing_it_wrong( '_get_non_cached_ids', $message, '6.3.0' );
 
 	return false;

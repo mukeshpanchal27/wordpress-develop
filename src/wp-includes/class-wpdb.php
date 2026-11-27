@@ -1770,7 +1770,7 @@ class wpdb {
 						sprintf(
 							/* translators: %s: Value type. */
 							__( 'Unsupported value type (%s).' ),
-							gettype( $value )
+							get_debug_type( $value )
 						),
 						'4.8.2'
 					);

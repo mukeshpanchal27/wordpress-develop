@@ -551,6 +551,74 @@ if ( ! function_exists( 'str_ends_with' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_debug_type' ) ) {
+	/**
+	 * Polyfill for `get_debug_type()` function added in PHP 8.0.
+	 *
+	 * Gets the type name of a variable in a way that is suitable for debugging.
+	 * Unlike `gettype()`, it uses the names of scalar types that are used in type
+	 * declarations, such as `int` rather than `integer`, and the class name for
+	 * objects rather than `object`.
+	 *
+	 * @since 7.3.0
+	 *
+	 * @param mixed $value The variable being type checked.
+	 * @return string The type name, for example `null`, `bool`, `int`, `float`, `string`,
+	 *                `array`, a class name, `class@anonymous`, or `resource (stream)`.
+	 */
+	function get_debug_type( $value ) {
+		if ( null === $value ) {
+			return 'null';
+		}
+
+		if ( is_bool( $value ) ) {
+			return 'bool';
+		}
+
+		if ( is_string( $value ) ) {
+			return 'string';
+		}
+
+		if ( is_array( $value ) ) {
+			return 'array';
+		}
+
+		if ( is_int( $value ) ) {
+			return 'int';
+		}
+
+		if ( is_float( $value ) ) {
+			return 'float';
+		}
+
+		if ( is_object( $value ) ) {
+			$class = get_class( $value );
+
+			if ( ! str_contains( $class, '@anonymous' ) ) {
+				return $class;
+			}
+
+			// Anonymous classes are named after their parent class or first interface, as in PHP.
+			$parent = get_parent_class( $class );
+			if ( false === $parent ) {
+				$interfaces = class_implements( $class );
+				$parent     = $interfaces ? key( $interfaces ) : 'class';
+			}
+
+			return $parent . '@anonymous';
+		}
+
+		// Only resources are left, and closed resources report their type as "Unknown".
+		$type = get_resource_type( $value );
+
+		if ( 'Unknown' === $type ) {
+			$type = 'closed';
+		}
+
+		return "resource ($type)";
+	}
+}
+
 if ( ! function_exists( 'array_find' ) ) {
 	/**
 	 * Polyfill for `array_find()` function added in PHP 8.4.

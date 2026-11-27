@@ -148,7 +148,7 @@ class WP_Object_Cache {
 			return true;
 		}
 
-		$type = gettype( $key );
+		$type = get_debug_type( $key );
 
 		if ( ! function_exists( '__' ) ) {
 			wp_load_translations_early();
