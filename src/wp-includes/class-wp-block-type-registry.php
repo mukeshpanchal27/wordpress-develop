@@ -58,7 +58,7 @@ final class WP_Block_Type_Registry {
 			_doing_it_wrong(
 				__METHOD__,
 				/* translators: %s: The received block type name type. */
-				sprintf( __( 'Block type names must be strings, received %s.' ), gettype( $name ) ),
+				sprintf( __( 'Block type names must be strings, received %s.' ), get_debug_type( $name ) ),
 				'5.0.0'
 			);
 			return false;
