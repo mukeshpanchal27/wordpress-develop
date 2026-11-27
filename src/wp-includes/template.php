@@ -153,7 +153,7 @@ function get_archive_template() {
 	$templates = array();
 
 	if ( count( $post_types ) === 1 ) {
-		$post_type   = reset( $post_types );
+		$post_type   = array_first( $post_types );
 		$templates[] = "archive-{$post_type}.php";
 	}
 	$templates[] = 'archive.php';

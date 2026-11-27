@@ -153,7 +153,7 @@ final class WP_Term {
 
 				// If only one match was found, it's the one we want.
 			} elseif ( 1 === count( $terms ) ) {
-				$_term = reset( $terms );
+				$_term = array_first( $terms );
 
 				// Otherwise, the term must be shared between taxonomies.
 			} else {
