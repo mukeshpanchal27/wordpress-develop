@@ -1531,7 +1531,7 @@ function wp_ajax_add_menu_item() {
 			}
 
 			$_menu_items = array_map( 'wp_setup_nav_menu_item', array( $_object ) );
-			$_menu_item  = reset( $_menu_items );
+			$_menu_item  = array_first( $_menu_items );
 
 			// Restore the missing menu item properties.
 			$menu_item_data['menu-item-description'] = $_menu_item->description;

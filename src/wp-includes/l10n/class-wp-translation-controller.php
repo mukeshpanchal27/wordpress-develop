@@ -116,7 +116,7 @@ final class WP_Translation_Controller {
 			isset( $this->loaded_files[ $translation_file ][ $locale ] ) &&
 			array() !== $this->loaded_files[ $translation_file ][ $locale ]
 		) {
-			$moe = reset( $this->loaded_files[ $translation_file ][ $locale ] );
+			$moe = array_first( $this->loaded_files[ $translation_file ][ $locale ] );
 		} else {
 			$moe = WP_Translation_File::create( $translation_file );
 			if ( false === $moe || null !== $moe->error() ) {

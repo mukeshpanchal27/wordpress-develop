@@ -3118,8 +3118,8 @@ function rest_preload_api_request( $memo, $path ) {
 
 	$method = 'GET';
 	if ( is_array( $path ) && 2 === count( $path ) ) {
-		$method = end( $path );
-		$path   = reset( $path );
+		$method = array_last( $path );
+		$path   = array_first( $path );
 
 		if ( ! in_array( $method, array( 'GET', 'OPTIONS' ), true ) ) {
 			$method = 'GET';

@@ -786,11 +786,11 @@ function choose_primary_blog() {
 			</select>
 			<?php
 			if ( ! $found ) {
-				$blog = reset( $all_blogs );
+				$blog = array_first( $all_blogs );
 				update_user_meta( get_current_user_id(), 'primary_blog', $blog->userblog_id );
 			}
 		} elseif ( 1 === count( $all_blogs ) ) {
-			$blog = reset( $all_blogs );
+			$blog = array_first( $all_blogs );
 			echo esc_url( get_home_url( $blog->userblog_id ) );
 			if ( $blog->userblog_id !== $primary_blog ) { // Set the primary blog again if it's out of sync with blog list.
 				update_user_meta( get_current_user_id(), 'primary_blog', $blog->userblog_id );

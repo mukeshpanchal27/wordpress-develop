@@ -1748,7 +1748,7 @@ class WP_Query {
 		$primary_meta_query = false;
 		$meta_clauses       = $this->meta_query->get_clauses();
 		if ( ! empty( $meta_clauses ) ) {
-			$primary_meta_query = reset( $meta_clauses );
+			$primary_meta_query = array_first( $meta_clauses );
 
 			if ( ! empty( $primary_meta_query['key'] ) ) {
 				$primary_meta_key = $primary_meta_query['key'];
@@ -3669,7 +3669,7 @@ class WP_Query {
 				}
 			}
 
-			$this->post = reset( $this->posts );
+			$this->post = array_first( $this->posts );
 		} else {
 			$this->post_count = 0;
 			$this->posts      = array();
@@ -4038,9 +4038,9 @@ class WP_Query {
 
 					if ( ! empty( $query['terms'] ) ) {
 						if ( 'term_id' === $query['field'] ) {
-							$term = get_term( reset( $query['terms'] ), $matched_taxonomy );
+							$term = get_term( array_first( $query['terms'] ), $matched_taxonomy );
 						} else {
-							$term = get_term_by( $query['field'], reset( $query['terms'] ), $matched_taxonomy );
+							$term = get_term_by( $query['field'], array_first( $query['terms'] ), $matched_taxonomy );
 						}
 					}
 				}

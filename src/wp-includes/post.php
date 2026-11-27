@@ -6121,7 +6121,7 @@ function wp_set_post_categories( $post_id = 0, $post_categories = array(), $appe
 		} else {
 			$post_categories = array();
 		}
-	} elseif ( 1 === count( $post_categories ) && '' === reset( $post_categories ) ) {
+	} elseif ( 1 === count( $post_categories ) && '' === array_first( $post_categories ) ) {
 		return true;
 	}
 

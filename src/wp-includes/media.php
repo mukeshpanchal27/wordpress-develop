@@ -5734,7 +5734,7 @@ function attachment_url_to_postid( $url ) {
 
 	if ( $results ) {
 		// Use the first available result, but prefer a case-sensitive match, if exists.
-		$post_id = reset( $results )->post_id;
+		$post_id = array_first( $results )->post_id;
 
 		if ( count( $results ) > 1 ) {
 			foreach ( $results as $result ) {

@@ -2590,7 +2590,7 @@ function upgrade_network() {
 	if ( $wp_current_db_version < 24448 ) {
 		$illegal_names = get_site_option( 'illegal_names' );
 		if ( is_array( $illegal_names ) && count( $illegal_names ) === 1 ) {
-			$illegal_name  = reset( $illegal_names );
+			$illegal_name  = array_first( $illegal_names );
 			$illegal_names = explode( ' ', $illegal_name );
 			update_site_option( 'illegal_names', $illegal_names );
 		}
